@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_complaint_management" model="ir.sequence">
+            <field name="name">Complaint Reference</field>
+            <field name="code">complaint.management</field>
+            <field name="prefix">CMP/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+    </data>
+</odoo>

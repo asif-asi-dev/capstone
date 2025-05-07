@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_complaint_management,access_complaint_management,model_complaint_management,base.group_user,1,1,1,1
+access_complaint_assignment,access_complaint_assignment,model_complaint_assignment,base.group_user,1,1,1,1
+access_complaint_type,access_complaint_type,model_complaint_type,base.group_system,1,1,1,1
+access_complaint_product_line,access_complaint_product_line,model_complaint_product_line,base.group_user,1,1,1,1

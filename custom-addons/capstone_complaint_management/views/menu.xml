@@ -1,0 +1,21 @@
+<odoo>
+
+     <menuitem
+        id="menu_complaint_root"
+        name="Complaint Management"
+        web_icon=""
+        sequence="100"
+    />
+     <menuitem
+        id="menu_complaint"
+        name="Complaints"
+        parent="menu_complaint_root"
+        action="action_complaint_management"
+    />
+     <menuitem
+        id="menu_assignment"
+        name="Assignments"
+        parent="menu_complaint_root"
+        action="action_complaint_assignment"
+    />
+</odoo>
