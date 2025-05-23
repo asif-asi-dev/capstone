@@ -6,3 +6,4 @@ from . import complaint_type
 from . import complaint_line
 from . import stock_picking
 from . import repair_order
+from . import review_line

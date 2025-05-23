@@ -3,10 +3,18 @@
         <field name="name">complaint.management.tree</field>
         <field name="model">complaint.management</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree string="Complaints" default_order="id desc">
                 <field name="name"/>
                 <field name="customer_id"/>
+                <field name="purchased_shop_id"/>
+                <field name="date"/>
                 <field name="state"/>
+                <field name="assignment_ids" widget="many2many_tags" options="{'no_create': True}"
+                       string="Assignments"/>
+                <field name="repair_order_ids" widget="many2many_tags" options="{'no_create': True}"
+                       string="Services"/>
+                <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"
+                       string="Return/Replacements"/>
             </tree>
         </field>
     </record>
@@ -24,9 +32,36 @@
                             type="object"
                             class="btn-primary" invisible="state != 'draft'"
                     />
+                    <button name="action_open_feedback_wizard"
+                            string="Update Feedback"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'resolved' or review_line_ids"
+                    />
+
+
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" invisible="not assignment_ids"
+                                name="action_view_assignments"
+                                class="oe_stat_button"
+                                icon="fa-tasks">
+                            <field name="assignment_count" widget="statinfo" string="Assignments"/>
+                        </button>
+                        <button name="action_view_pickings" type="object"
+                                icon="fa-truck" class="oe_stat_button"
+                                invisible="not picking_ids"
+                        >
+                            <field name="picking_count" widget="statinfo" string="Return/Replacement"/>
+                        </button>
+
+                        <button name="action_view_repairs" type="object"
+                                icon="fa-wrench" class="oe_stat_button"
+                                invisible="not repair_order_ids">
+                            <field name="repair_count" widget="statinfo" string="Repairs"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h2>
                             <field name="name" readonly="1" nolabel="1"/>
@@ -35,30 +70,44 @@
                     <!-- STATUSBAR -->
                     <group>
                         <group>
-                            <field name="customer_id"/>
-                            <field name="purchase_date"/>
-                            <field name="complaint_type_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="customer_id" required="1" readonly="state != 'draft'"/>
+                            <field name="purchase_date" required="1" readonly="state != 'draft'"/>
+                            <field name="complaint_type_ids" widget="many2many_tags" invisible="1"
+                                   readonly="state != 'draft'"/>
                         </group>
 
                         <group>
-                            <field name="purchased_shop_id"/>
-                            <field name="date"/>
-                            <field name="assignment_ids" invisible="1"/>
+                            <field name="purchased_shop_id" required="1" readonly="state != 'draft'"/>
+                            <field name="date" required="1" readonly="state != 'draft'"/>
+                            <field name="assignment_ids" invisible="1" readonly="state != 'draft'"/>
+                            <field name="picking_ids" invisible="1"/>
+                            <field name="repair_order_ids" invisible="1"/>
+                            <field name="technician_id"/>
                         </group>
                     </group>
 
                     <!-- NOTEBOOK START -->
                     <notebook>
                         <page string="Complaint Products">
-                            <field name="product_line_ids">
+                            <field name="product_line_ids" required="1" readonly="state != 'draft'">
                                 <tree editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="quantity"/>
+                                    <field name="product_id" readonly="parent.state != 'draft'"/>
+                                    <field name="quantity" readonly="parent.state != 'draft'"/>
                                 </tree>
                             </field>
                         </page>
                         <page string="Complaint Description">
-                            <field name="description" placeholder="Describe the issue as mentioned by the customer..."/>
+                            <field name="description" placeholder="Describe the issue as mentioned by the customer..."
+                                   readonly="state != 'draft'"/>
+                        </page>
+                        <page string="Reviews">
+                            <field name="review_line_ids" readonly="1">
+                                <tree>
+                                    <field name="technician_id" readonly="1"/>
+                                    <field name="rating" readonly="1"/>
+                                    <field name="feedback" readonly="1"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <!-- NOTEBOOK END -->
@@ -71,6 +120,49 @@
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
+        </field>
+    </record>
+
+    <record id="view_complaint_management_search" model="ir.ui.view">
+        <field name="name">complaint.management.search</field>
+        <field name="model">complaint.management</field>
+        <field name="arch" type="xml">
+            <search string="Complaints">
+                <!-- Main Combined Search -->
+                <field name="name" string="Reference / Customer"
+                       filter_domain="['|',('name','ilike',self),('customer_id','ilike',self)]"/>
+
+                <!-- Search Panel -->
+                <!--            <searchpanel>-->
+                <!--                <field name="purchased_shop_id" icon="fa-store" enable_counters="1"/>-->
+                <!--            </searchpanel>-->
+
+                <!-- Specific Field Filters -->
+                <field name="date"/>
+                <field name="customer_id"/>
+                <field name="product_line_ids" string="Product"
+                       filter_domain="[('product_line_ids.product_id.name','ilike',self)]"/>
+                <field name="assignment_ids" string="Assignment"
+                       filter_domain="[('assignment_ids.name','ilike',self)]"/>
+                <field name="repair_order_ids" string="Services"
+                       filter_domain="[('repair_order_ids.name','ilike',self)]"/>
+                <field name="picking_ids" string="Return or replacement"
+                       filter_domain="[('picking_ids.name','ilike',self)]"/>
+                <!-- State Filters -->
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_submitted" string="Submitted" domain="[('state','=','submitted')]"/>
+                <filter name="filter_resolved" string="Resolved" domain="[('state','=','resolved')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state','=','closed')]"/>
+
+                <!-- Group By -->
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_customer" string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
+                    <filter name="group_shop" string="Shop" domain="[]" context="{'group_by':'purchased_shop_id'}"/>
+                    <filter name="group_state" string="Status" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

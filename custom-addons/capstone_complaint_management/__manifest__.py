@@ -10,7 +10,7 @@ Long description of module's purpose
     'author': "My Company",
     'website': "https://www.yourcompany.com",
     'category': 'Uncategorized',
-    'version': '17.0.0.1',
+    'version': '17.0.0.2',
     'depends': ['base', 'stock', 'account', 'mail', 'repair'],
     'data': [
         'security/security.xml',
@@ -20,6 +20,7 @@ Long description of module's purpose
         'views/complaint_type_view.xml',
         'data/complaint_sequence.xml',
         'data/assignment_sequence.xml',
+        'wizard/feedback_wizard_view.xml',
         'views/menu.xml',
     ],
 }

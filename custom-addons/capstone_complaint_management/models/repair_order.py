@@ -10,11 +10,11 @@ class RepairOrder(models.Model):
 
         for repair in self:
             assignment = repair.assignment_id
-            if assignment:
+            if assignment and assignment.resolution_type == 'service':
                 # Check if all related repair orders are done
                 all_done = all(r.state == 'done' for r in assignment.repair_order_ids)
                 if all_done:
-                    assignment.state = 'done'
+                    assignment.write({'state': 'done'})
                     if assignment.complaint_id:
                         assignment.complaint_id.state = 'resolved'
 

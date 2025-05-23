@@ -3,3 +3,5 @@ access_complaint_management,access_complaint_management,model_complaint_manageme
 access_complaint_assignment,access_complaint_assignment,model_complaint_assignment,base.group_user,1,1,1,1
 access_complaint_type,access_complaint_type,model_complaint_type,base.group_system,1,1,1,1
 access_complaint_product_line,access_complaint_product_line,model_complaint_product_line,base.group_user,1,1,1,1
+access_complaint_review_line,access_complaint_review_line,model_complaint_review_line,base.group_user,1,1,1,1
+access_complaint_feedback_wizard,access_complaint_feedback_wizard,model_complaint_feedback_wizard,base.group_user,1,1,1,1

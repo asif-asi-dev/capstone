@@ -58,7 +58,7 @@ class ComplaintAssignment(models.Model):
     )
     picking_ids = fields.One2many(
         'stock.picking', 'assignment_id',
-        string='Related Pickings'
+        string='Related Pickings', store=True
     )
 
     picking_count = fields.Integer(
@@ -68,7 +68,7 @@ class ComplaintAssignment(models.Model):
         string="Service Count", compute="_compute_repair_count"
     )
     repair_order_ids = fields.One2many(
-        'repair.order', 'assignment_id', string="Repair Orders", compute="_compute_repair_orders"
+        'repair.order', 'assignment_id', string="Repair Orders", compute="_compute_repair_orders", store=True
     )
 
     @api.depends('repair_order_ids')
