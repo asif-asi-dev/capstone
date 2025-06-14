@@ -1,0 +1,10 @@
+<odoo>
+    <record id="seq_fsm_shop_visit" model="ir.sequence">
+        <field name="name">FSM Shop Visit</field>
+        <field name="code">fsm.shop.visit</field>
+        <field name="prefix">FSV</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

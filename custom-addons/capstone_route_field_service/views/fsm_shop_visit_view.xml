@@ -1,0 +1,75 @@
+<odoo>
+    <record id="view_fsm_shop_visit_form" model="ir.ui.view">
+        <field name="name">fsm.shop.visit.form</field>
+        <field name="model">fsm.shop.visit</field>
+        <field name="arch" type="xml">
+            <form string="Shop Visit">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,on_shop,done"
+                           statusbar_colors="{'on_shop': 'blue', 'done': 'green', 'cancel': 'red'}"/>
+                    <button name="action_visit_shop"
+                            type="object"
+                            string="Visit Shop"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_create_lead"
+                            type="object"
+                            string="Create Lead"
+                            class="oe_stat_button btn-primary"
+                            icon="fa-lightbulb" invisible="state != 'on_shop'"/>
+                    <button name="action_create_sale_order"
+                            type="object"
+                            string="Create Sale Order"
+                            class="oe_stat_button btn-primary"
+                            icon="fa-shopping-cart" invisible="state != 'on_shop'"/>
+                    <button name="action_create_expense"
+                            type="object"
+                            string="Create Expenses"
+                            class="oe_stat_button btn-primary"
+                            icon="fa-money-bill-wave" invisible="state != 'on_shop'"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <field name="name" readonly="1" nolabel="1"/>
+                        </h2>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+
+                    </div>
+                    <group>
+                        <field name="visit_datetime"/>
+                        <field name="route_id"/>
+                        <field name="shop_id"/>
+                        <field name="salesperson_id" readonly="1"/>
+                        <field name="feedback" invisible="state != 'on_shop'"/>
+                        <field name="market_trends" invisible="state != 'on_shop'"/>
+                        <field name="shop_domain_ids" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fsm_shop_visit_tree" model="ir.ui.view">
+        <field name="name">fsm.shop.visit.tree</field>
+        <field name="model">fsm.shop.visit</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="visit_datetime"/>
+                <field name="route_id"/>
+                <field name="shop_id"/>
+                <field name="salesperson_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_fsm_shop_visit" model="ir.actions.act_window">
+        <field name="name">Shop Visits</field>
+        <field name="res_model">fsm.shop.visit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fsm_shop_visit" name="Shop Visits" parent="menu_fsm_root" action="action_fsm_shop_visit"/>
+</odoo>
