@@ -2,7 +2,7 @@
     <record id="view_hr_expense_form_inherit_fsm" model="ir.ui.view">
         <field name="name">hr.expense.form.inherit.fsm</field>
         <field name="model">hr.expense</field>
-        <field name="inherit_id" ref="hr_expense.view_expense_form"/>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
         <field name="arch" type="xml">
             <field name="employee_id" position="after">
                 <field name="fsm_visit_id"/>
