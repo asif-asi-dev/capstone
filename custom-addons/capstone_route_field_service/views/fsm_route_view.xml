@@ -1,0 +1,42 @@
+<!-- views/fsm_route_views.xml -->
+<odoo>
+    <record id="view_fsm_route_form" model="ir.ui.view">
+        <field name="name">fsm.route.form</field>
+        <field name="model">fsm.route</field>
+        <field name="arch" type="xml">
+            <form string="Route">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="total_km"/>
+                        <field name="week_day_ids" widget="many2many_tags"/>
+                        <field name="shop_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fsm_route_tree" model="ir.ui.view">
+        <field name="name">fsm.route.tree</field>
+        <field name="model">fsm.route</field>
+        <field name="arch" type="xml">
+            <tree string="Routes">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="total_km"/>
+                <field name="week_day_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_fsm_route" model="ir.actions.act_window">
+        <field name="name">Routes</field>
+        <field name="res_model">fsm.route</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fsm_root" name="Capstone Field Service"/>
+    <menuitem id="menu_fsm_route" name="Routes" parent="menu_fsm_root" action="action_fsm_route"/>
+</odoo>

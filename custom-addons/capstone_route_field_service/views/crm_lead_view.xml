@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_crm_lead_form_inherit_fsm_visit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.fsm.visit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Option 1: Add after the partner_id field -->
+            <field name="tag_ids" position="after">
+                    <field name="fsm_visit_id"/>
+                    <field name="route_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

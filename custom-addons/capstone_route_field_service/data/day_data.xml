@@ -1,0 +1,30 @@
+<odoo>
+    <record id="fsm_weekday_mon" model="fsm.weekday">
+        <field name="name">Monday</field>
+        <field name="code">mon</field>
+    </record>
+    <record id="fsm_weekday_tue" model="fsm.weekday">
+        <field name="name">Tuesday</field>
+        <field name="code">tue</field>
+    </record>
+    <record id="fsm_weekday_wed" model="fsm.weekday">
+        <field name="name">Wednesday</field>
+        <field name="code">wed</field>
+    </record>
+    <record id="fsm_weekday_thu" model="fsm.weekday">
+        <field name="name">Thursday</field>
+        <field name="code">thu</field>
+    </record>
+    <record id="fsm_weekday_fri" model="fsm.weekday">
+        <field name="name">Friday</field>
+        <field name="code">fri</field>
+    </record>
+    <record id="fsm_weekday_sat" model="fsm.weekday">
+        <field name="name">Saturday</field>
+        <field name="code">sat</field>
+    </record>
+    <record id="fsm_weekday_sun" model="fsm.weekday">
+        <field name="name">Sunday</field>
+        <field name="code">sun</field>
+    </record>
+</odoo>
