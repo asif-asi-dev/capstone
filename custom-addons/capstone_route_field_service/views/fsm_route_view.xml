@@ -8,9 +8,8 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="partner_id"/>
+                        <field name="area_id"/>
                         <field name="total_km"/>
-                        <field name="week_day_ids" widget="many2many_tags"/>
                         <field name="shop_ids" widget="many2many_tags"/>
                     </group>
                 </sheet>
@@ -24,9 +23,8 @@
         <field name="arch" type="xml">
             <tree string="Routes">
                 <field name="name"/>
-                <field name="partner_id"/>
+                <field name="area_id"/>
                 <field name="total_km"/>
-                <field name="week_day_ids"/>
             </tree>
         </field>
     </record>
@@ -38,5 +36,5 @@
     </record>
 
     <menuitem id="menu_fsm_root" name="Capstone Field Service"/>
-    <menuitem id="menu_fsm_route" name="Routes" parent="menu_fsm_root" action="action_fsm_route"/>
+    <menuitem id="menu_fsm_route" name="Routes" parent="menu_fsm_configuration" action="action_fsm_route" sequence="20"/>
 </odoo>

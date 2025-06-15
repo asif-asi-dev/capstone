@@ -84,5 +84,5 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_fsm_shop_visit" name="Shop Visits" parent="menu_fsm_root" action="action_fsm_shop_visit"/>
+    <menuitem id="menu_fsm_shop_visit" name="Shop Visits" parent="menu_fsm_root" action="action_fsm_shop_visit" sequence="20"/>
 </odoo>
