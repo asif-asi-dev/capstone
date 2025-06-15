@@ -6,6 +6,6 @@ class FSMRoute(models.Model):
 
     name = fields.Char(string='Route Name', required=True)
     shop_ids = fields.One2many('res.partner','route_id', string='Shops in Route',
-                               domain="[('is_company', '=', True), ('route_id', '!=', False)]")
+                               domain="[('is_company', '=', True)]")
     total_km = fields.Float(string='Total Distance (KM)')
     area_id =  fields.Many2one('fsm.area',string='Area')

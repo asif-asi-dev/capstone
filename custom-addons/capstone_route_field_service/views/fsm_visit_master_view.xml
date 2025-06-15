@@ -1,0 +1,65 @@
+<odoo>
+    <!-- Visit Master Form View -->
+    <record id="view_fsm_shop_visit_master_form" model="ir.ui.view">
+        <field name="name">fsm.shop.visit.master.form</field>
+        <field name="model">fsm.shop.visit.master</field>
+        <field name="arch" type="xml">
+            <form string="Shop Visit Master">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="salesperson_id"/>
+                        <field name="date"/>
+                        <field name="weekday_id"/>
+<!--                        <field name="route_assignment_id"-->
+<!--                               domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed')]"/>-->
+                    </group>
+                    <notebook>
+                        <page string="Shop Visits">
+                            <field name="shop_visit_ids">
+                                <tree editable="bottom">
+                                    <field name="weekday_id"/>
+                                    <field name="route_assignement_id"/>
+                                    <field name="salesperson_id"/>
+                                    <field name="shop_id"/>
+                                    <field name="state"/>
+                                    <button name="action_open_visit" type="object" string="Open"
+                                            icon="fa-external-link-alt"
+                                    />
+                                     <field name="shop_domain_ids" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Visit Master Tree View -->
+    <record id="view_fsm_shop_visit_master_tree" model="ir.ui.view">
+        <field name="name">fsm.shop.visit.master.tree</field>
+        <field name="model">fsm.shop.visit.master</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="salesperson_id"/>
+                <field name="date"/>
+                <field name="weekday_id"/>
+                <field name="route_assignment_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open the form -->
+    <record id="action_fsm_shop_visit_master" model="ir.actions.act_window">
+        <field name="name">Shop Visit Masters</field>
+        <field name="res_model">fsm.shop.visit.master</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu Item -->
+
+
+</odoo>

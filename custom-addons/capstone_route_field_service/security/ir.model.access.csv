@@ -4,3 +4,4 @@ access_fsm_shop_visit_user,fsm.shop.visit user,model_fsm_shop_visit,base.group_u
 access_fsm_weekday,fsm.weekday,model_fsm_weekday,base.group_user,1,1,1,1
 access_fsm_area,fsm.area,model_fsm_area,base.group_user,1,1,1,1
 access_fsm_route_assignment,fsm.route.assignment,model_fsm_route_assignment,base.group_user,1,1,1,1
+access_fsm_shop_visit_master,fsm.shop.visit.master,model_fsm_shop_visit_master,base.group_user,1,1,1,1

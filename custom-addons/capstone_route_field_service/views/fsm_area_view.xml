@@ -55,6 +55,5 @@
     </record>
 
     <!-- Menu Item -->
-    <menuitem id="menu_fsm_configuration" name="Configurations" parent="menu_fsm_root" action="action_fsm_route" sequence="30"/>
-    <menuitem id="menu_fsm_area" name="Area" parent="menu_fsm_configuration" action="action_fsm_area" sequence="10"/>
+
 </odoo>
