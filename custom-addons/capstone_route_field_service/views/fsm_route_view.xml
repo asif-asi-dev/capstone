@@ -34,7 +34,4 @@
         <field name="res_model">fsm.route</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem id="menu_fsm_root" name="Capstone Field Service"/>
-    <menuitem id="menu_fsm_route" name="Routes" parent="menu_fsm_configuration" action="action_fsm_route" sequence="20"/>
 </odoo>

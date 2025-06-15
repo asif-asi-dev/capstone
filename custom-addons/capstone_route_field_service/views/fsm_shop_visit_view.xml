@@ -22,11 +22,13 @@
                             string="Create Sale Order"
                             class="oe_stat_button btn-primary"
                             icon="fa-shopping-cart" invisible="state != 'on_shop'"/>
-                    <button name="action_create_expense"
-                            type="object"
-                            string="Create Expenses"
-                            class="oe_stat_button btn-primary"
-                            icon="fa-money-bill-wave" invisible="state != 'on_shop'"/>
+<!--                    <button name="action_create_expense"-->
+<!--                            type="object"-->
+<!--                            string="Create Expenses"-->
+<!--                            class="oe_stat_button btn-primary"-->
+<!--                            icon="fa-money-bill-wave" invisible="state != 'on_shop'"/>-->
+                    <button name="action_create_payment" type="object" string="Collect Payment" icon="fa-credit-card" class="oe_stat_button btn-primary"
+                            invisible="state != 'on_shop'"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -38,9 +40,10 @@
 
                     </div>
                     <group>
-                        <field name="visit_datetime"/>
-                        <field name="route_id"/>
-                        <field name="shop_id"/>
+                        <field name="visit_datetime" readonly="state != 'draft'"/>
+                        <field name="weekday_id"/>
+                        <field name="route_assignement_id" readonly="state != 'draft'"/>
+                        <field name="shop_id" readonly="state != 'draft'"/>
                         <field name="salesperson_id" readonly="1"/>
                         <field name="feedback" invisible="state != 'on_shop'"/>
                         <field name="market_trends" invisible="state != 'on_shop'"/>
@@ -71,7 +74,7 @@
             <tree>
                 <field name="name"/>
                 <field name="visit_datetime"/>
-                <field name="route_id"/>
+                <field name="route_assignement_id"/>
                 <field name="shop_id"/>
                 <field name="salesperson_id"/>
             </tree>
@@ -84,5 +87,4 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_fsm_shop_visit" name="Shop Visits" parent="menu_fsm_root" action="action_fsm_shop_visit" sequence="20"/>
 </odoo>

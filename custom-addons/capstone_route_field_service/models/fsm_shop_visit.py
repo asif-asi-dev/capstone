@@ -9,7 +9,12 @@ class FSMShopVisit(models.Model):
 
     name = fields.Char(string="Reference", required=True, readonly=True, default="New")
     visit_datetime = fields.Datetime(string="Visit Date & Time", required=True, default=fields.Datetime.now)
-    route_id = fields.Many2one('fsm.route', string='Route', required=True, domain=lambda self: self._get_route_domain())
+    weekday_id = fields.Many2one('fsm.weekday', string='Weekday', compute="_compute_weekday", store=True)
+    route_assignement_id = fields.Many2one(
+        'fsm.route.assignment',
+        string='Route Assignment',
+        domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed'), ('week_day_ids', 'in', weekday_id)]"
+    )
     shop_id = fields.Many2one('res.partner', string='Shop', domain="[('id', 'in', shop_domain_ids)]", required=True)
     shop_domain_ids = fields.Many2many('res.partner', compute="_compute_shop_domain_ids", store=False)
     state = fields.Selection([
@@ -23,38 +28,29 @@ class FSMShopVisit(models.Model):
     feedback = fields.Text(string="Shopkeeper Feedback")
     market_trends = fields.Text(string="Market Trends")
     expense_ids = fields.One2many('hr.expense','fsm_visit_id')
+    visit_master_id = fields.Many2one('fsm.shop.visit.master', string='Visit Master')
 
-    # @api.model_create_multi
-    # def create(self, vals):
-    #     if vals.get('name', 'New') == 'New':
-    #         vals['name'] = self.env['ir.sequence'].next_by_code('fsm.shop.visit') or 'New'
-    #     return super(FSMShopVisit, self).create(vals)
+    @api.depends('visit_datetime')
+    def _compute_weekday(self):
+        for rec in self:
+            if rec.visit_datetime:
+                weekday_str = fields.Date.from_string(rec.visit_datetime.date()).strftime('%A')
+                weekday = self.env['fsm.weekday'].search([('name', '=', weekday_str)], limit=1)
+                rec.weekday_id = weekday
+            else:
+                rec.weekday_id = False
 
-    # @api.model
-    # def create(self, vals):
-    #     if vals.get('name', 'New') == 'New':
-    #         vals['name'] = self.env['ir.sequence'].next_by_code('fsm.shop.visit') or 'New'
-    #     return super(ComplaintAssignment, self).create(vals)
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('fsm.shop.visit') or 'New'
+        return super(FSMShopVisit, self).create(vals)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        if isinstance(vals_list, list):
-            for vals in vals_list:
-                if vals.get('name', 'New') == 'New':
-                    vals['name'] = self.env['ir.sequence'].next_by_code('fsm.shop.visit') or 'New'
-        else:
-            if vals_list.get('name', 'New') == 'New':
-                vals_list['name'] = self.env['ir.sequence'].next_by_code('fsm.shop.visit') or 'New'
-        return super(FSMShopVisit, self).create(vals_list)
-
-    @api.depends('route_id')
+    @api.depends('route_assignement_id')
     def _compute_shop_domain_ids(self):
         for rec in self:
-            rec.shop_domain_ids = rec.route_id.shop_ids if rec.route_id else False
+            rec.shop_domain_ids = rec.route_assignement_id.shop_ids if rec.route_assignement_id else False
 
-    def _get_route_domain(self):
-        partner = self.env.user.partner_id
-        return [('partner_id', '=', partner.id)]
 
     def action_create_lead(self):
         self.ensure_one()
@@ -66,7 +62,6 @@ class FSMShopVisit(models.Model):
                 'default_partner_id': self.shop_id.id,
                 'default_user_id': self.salesperson_id.id,
                 'default_fsm_visit_id': self.id,
-                'default_route_id': self.route_id.id,
             },
             'target': 'current',
         }
@@ -81,7 +76,6 @@ class FSMShopVisit(models.Model):
                 'default_partner_id': self.shop_id.id,
                 'default_user_id': self.salesperson_id.id,
                 'default_fsm_visit_id': self.id,
-                'default_route_id': self.route_id.id,
             },
             'target': 'current',
         }
@@ -94,7 +88,6 @@ class FSMShopVisit(models.Model):
             'view_mode': 'form',
             'context': {
                 'default_fsm_visit_id': self.id,
-                'default_route_id': self.route_id.id,
             },
             'target': 'current',
         }
@@ -102,4 +95,27 @@ class FSMShopVisit(models.Model):
     def action_visit_shop(self):
         for visit in self:
             visit.state = 'on_shop'
+
+    def action_open_visit(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'fsm.shop.visit',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+        }
+
+    def action_create_payment(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'view_mode': 'form',
+            'context': {
+                'default_fsm_visit_id': self.id,
+                'default_partner_id': self.shop_id.id,
+            },
+            'target': 'current',
+        }
 
