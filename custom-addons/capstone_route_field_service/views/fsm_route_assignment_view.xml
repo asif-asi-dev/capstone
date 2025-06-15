@@ -1,0 +1,39 @@
+<!-- views/fsm_route_views.xml -->
+<odoo>
+    <record id="view_fsm_route_assignment_form" model="ir.ui.view">
+        <field name="name">fsm.route.assignment.form</field>
+        <field name="model">fsm.route.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Route Assignment">
+                <sheet>
+                    <group>
+                        <field name="route_id"/>
+                        <field name="partner_id"/>
+                        <field name="week_day_ids" widget="many2many_tags"/>
+                        <field name="shop_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fsm_route_assignment_tree" model="ir.ui.view">
+        <field name="name">fsm.route.tree</field>
+        <field name="model">fsm.route.assignment</field>
+        <field name="arch" type="xml">
+            <tree string="Routes Assignment">
+                <field name="route_id"/>
+                <field name="partner_id"/>
+                <field name="shop_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_fsm_route_assignment" model="ir.actions.act_window">
+        <field name="name">Routes Assignment</field>
+        <field name="res_model">fsm.route.assignment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fsm_root_assignment" name="Route Assignment" parent="capstone_route_field_service.menu_fsm_root" action="action_fsm_route_assignment" sequence="10"/>
+</odoo>

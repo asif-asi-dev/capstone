@@ -25,12 +25,15 @@ Long description of module's purpose
         'security/ir.model.access.csv',
         'data/day_data.xml',
         'views/views.xml',
+        'views/fsm_area_view.xml',
+        'views/fsm_route_assignment_view.xml',
         'views/fsm_route_view.xml',
         'views/fsm_shop_visit_view.xml',
         'views/crm_lead_view.xml',
         'data/fsm_shop_visit_sequence.xml',
         'views/sale_order_view.xml',
-        'views/hr_expense_view.xml'
+        'views/hr_expense_view.xml',
+        'views/partner_view.xml'
     ],
     # only loaded in demonstration mode
 }

@@ -1,0 +1,60 @@
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_fsm_area_form" model="ir.ui.view">
+        <field name="name">fsm.area.form</field>
+        <field name="model">fsm.area</field>
+        <field name="arch" type="xml">
+            <form string="Field Service Route Area">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="country_id"/>
+                        <field name="state_id"/>
+                        <field name="city"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_fsm_area_tree" model="ir.ui.view">
+        <field name="name">fsm.area.tree</field>
+        <field name="model">fsm.area</field>
+        <field name="arch" type="xml">
+            <tree string="Field Service Route Areas">
+                <field name="name"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <field name="city"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_fsm_area_search" model="ir.ui.view">
+        <field name="name">fsm.area.search</field>
+        <field name="model">fsm.area</field>
+        <field name="arch" type="xml">
+            <search string="Search FSM Areas">
+                <field name="name"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <field name="city"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_fsm_area" model="ir.actions.act_window">
+        <field name="name">FSM Areas</field>
+        <field name="res_model">fsm.area</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_fsm_area_search"/>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_fsm_configuration" name="Configurations" parent="menu_fsm_root" action="action_fsm_route" sequence="30"/>
+    <menuitem id="menu_fsm_area" name="Area" parent="menu_fsm_configuration" action="action_fsm_area" sequence="10"/>
+</odoo>
