@@ -22,6 +22,7 @@ class FSMShopVisit(models.Model):
     salesperson_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     feedback = fields.Text(string="Shopkeeper Feedback")
     market_trends = fields.Text(string="Market Trends")
+    expense_ids = fields.One2many('hr.expense','fsm_visit_id')
 
     # @api.model_create_multi
     # def create(self, vals):
