@@ -10,7 +10,7 @@ class FSMShopVisitMaster(models.Model):
     salesperson_id = fields.Many2one('res.users', string='Salesperson', required=True)
     date = fields.Date(string='Visit Date', required=True)
     weekday_id = fields.Many2one('fsm.weekday', string='Week Day', required=True)
-    route_assignment_id = fields.Many2one(
+    route_assignement_id = fields.Many2one(
         'fsm.route.assignment',
         string='Route Assignment',
         domain="[('state', '=', 'confirmed')]"
@@ -29,7 +29,7 @@ class FSMShopVisitMaster(models.Model):
         if self.salesperson_id and self.weekday_id:
             return {
                 'domain': {
-                    'route_assignment_id': [
+                    'route_assignement_id': [
                         ('sales_partner_id', '=', self.salesperson_id.id),
                         ('state', '=', 'confirmed'),
                     ]
