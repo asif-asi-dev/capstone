@@ -16,6 +16,17 @@ class FSMShopVisitMaster(models.Model):
         domain="[('state', '=', 'confirmed')]"
     )
     shop_visit_ids = fields.One2many('fsm.shop.visit', 'visit_master_id', string='Shop Visits')
+    total_klm_traveled = fields.Float(
+        'Kilometers Traveled',
+        digits=(16, 2),
+        compute='_compute_total_klm_traveled',
+        store=True,
+    )
+
+    @api.depends('shop_visit_ids.kilometers_traveled')
+    def _compute_total_klm_traveled(self):
+        for record in self:
+            record.total_klm_traveled = sum(record.shop_visit_ids.mapped('kilometers_traveled'))
 
     @api.model
     def create(self, vals):
