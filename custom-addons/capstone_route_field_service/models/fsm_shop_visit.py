@@ -29,6 +29,8 @@ class FSMShopVisit(models.Model):
     market_trends = fields.Text(string="Market Trends")
     expense_ids = fields.One2many('hr.expense','fsm_visit_id')
     visit_master_id = fields.Many2one('fsm.shop.visit.master', string='Visit Master')
+    prvs_shop_id = fields.Many2one('res.partner', string='Previous Shop', domain="[('id', 'in', shop_domain_ids)]", required=True)
+    kilometers_traveled = fields.Float()
 
     @api.depends('visit_datetime')
     def _compute_weekday(self):
@@ -95,6 +97,24 @@ class FSMShopVisit(models.Model):
     def action_visit_shop(self):
         for visit in self:
             visit.state = 'on_shop'
+            existing_master = self.env['fsm.shop.visit.master'].search([
+                ('date', '=', fields.Date.today()),
+                ('salesperson_id', '=', self.salesperson_id.id),
+                ('route_assignement_id', '=', self.route_assignement_id.id)
+            ], limit=1)
+            if existing_master:
+                self.visit_master_id = existing_master.id
+            else:
+                vals = {
+                    'date': fields.Date.today(),
+                    'salesperson_id': self.salesperson_id.id,
+                    'route_assignement_id': self.route_assignement_id.id,
+                    'weekday_id':self.weekday_id.id
+                }
+
+                visit_master = self.env['fsm.shop.visit.master'].create(vals)
+
+                self.visit_master_id = visit_master.id
 
     def action_open_visit(self):
         self.ensure_one()

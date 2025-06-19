@@ -10,12 +10,23 @@ class FSMShopVisitMaster(models.Model):
     salesperson_id = fields.Many2one('res.users', string='Salesperson', required=True)
     date = fields.Date(string='Visit Date', required=True)
     weekday_id = fields.Many2one('fsm.weekday', string='Week Day', required=True)
-    route_assignment_id = fields.Many2one(
+    route_assignement_id = fields.Many2one(
         'fsm.route.assignment',
         string='Route Assignment',
         domain="[('state', '=', 'confirmed')]"
     )
     shop_visit_ids = fields.One2many('fsm.shop.visit', 'visit_master_id', string='Shop Visits')
+    total_klm_traveled = fields.Float(
+        'Kilometers Traveled',
+        digits=(16, 2),
+        compute='_compute_total_klm_traveled',
+        store=True,
+    )
+
+    @api.depends('shop_visit_ids.kilometers_traveled')
+    def _compute_total_klm_traveled(self):
+        for record in self:
+            record.total_klm_traveled = sum(record.shop_visit_ids.mapped('kilometers_traveled'))
 
     @api.model
     def create(self, vals):
@@ -29,7 +40,7 @@ class FSMShopVisitMaster(models.Model):
         if self.salesperson_id and self.weekday_id:
             return {
                 'domain': {
-                    'route_assignment_id': [
+                    'route_assignement_id': [
                         ('sales_partner_id', '=', self.salesperson_id.id),
                         ('state', '=', 'confirmed'),
                     ]

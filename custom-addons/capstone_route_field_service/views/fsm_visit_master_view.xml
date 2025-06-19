@@ -7,12 +7,20 @@
             <form string="Shop Visit Master">
                 <sheet>
                     <group>
-                        <field name="name" readonly="1"/>
-                        <field name="salesperson_id"/>
-                        <field name="date"/>
-                        <field name="weekday_id"/>
-<!--                        <field name="route_assignment_id"-->
-<!--                               domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed')]"/>-->
+
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="salesperson_id"/>
+                            <field name="date"/>
+                            <field name="weekday_id"/>
+
+                        </group>
+                        <group>
+                            <field name="route_assignement_id"
+                                   domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed')]"/>
+                            <field name="total_klm_traveled"/>
+
+                        </group>
                     </group>
                     <notebook>
                         <page string="Shop Visits">
@@ -26,7 +34,7 @@
                                     <button name="action_open_visit" type="object" string="Open"
                                             icon="fa-external-link-alt"
                                     />
-                                     <field name="shop_domain_ids" column_invisible="1"/>
+                                    <field name="shop_domain_ids" column_invisible="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -46,7 +54,7 @@
                 <field name="salesperson_id"/>
                 <field name="date"/>
                 <field name="weekday_id"/>
-                <field name="route_assignment_id"/>
+                <field name="route_assignement_id"/>
             </tree>
         </field>
     </record>

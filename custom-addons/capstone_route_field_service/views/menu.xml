@@ -8,10 +8,10 @@
               action="action_fsm_route_assignment" sequence="10"/>
     <menuitem id="menu_fsm_shop_visit" name="Shop Visits" parent="menu_fsm_root" action="action_fsm_shop_visit"
               sequence="20"/>
-<!--    <menuitem id="menu_fsm_shop_visit_master"-->
-<!--              name="Shop Visit Masters"-->
-<!--              parent="menu_fsm_root"-->
-<!--              action="action_fsm_shop_visit_master"-->
-<!--              sequence="10"/>-->
+    <menuitem id="menu_fsm_shop_visit_master"
+              name="Shop Visit Summary"
+              parent="menu_fsm_root"
+              action="action_fsm_shop_visit_master"
+              sequence="21"/>
 
 </odoo>
