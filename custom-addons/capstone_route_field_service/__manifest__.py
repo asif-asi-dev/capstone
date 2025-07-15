@@ -15,7 +15,7 @@ Long description of module's purpose
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.3',
+    'version': '0.4',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'crm', 'sale', 'hr_expense', 'account'],
@@ -33,6 +33,7 @@ Long description of module's purpose
         'views/hr_expense_view.xml',
         'views/partner_view.xml',
         'views/fsm_area_view.xml',
+        'views/fsm_territory_views.xml',
         'views/fsm_route_assignment_view.xml',
         'views/fsm_shop_visit_view.xml',
         'views/fsm_visit_master_view.xml',

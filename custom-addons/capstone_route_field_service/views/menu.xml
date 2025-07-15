@@ -1,7 +1,8 @@
 <odoo>
     <menuitem id="menu_fsm_root" name="Capstone Field Service"/>
     <menuitem id="menu_fsm_configuration" name="Configurations" parent="menu_fsm_root" sequence="30"/>
-    <menuitem id="menu_fsm_area" name="Area" parent="menu_fsm_configuration" action="action_fsm_area" sequence="10"/>
+        <menuitem id="menu_fsm_territory" name="Territory" parent="menu_fsm_configuration" action="action_fsm_territory" sequence="10"/>
+    <menuitem id="menu_fsm_area" name="Area" parent="menu_fsm_configuration" action="action_fsm_area" sequence="10" active="False"/>
     <menuitem id="menu_fsm_route" name="Routes" parent="menu_fsm_configuration" action="action_fsm_route"
               sequence="20"/>
     <menuitem id="menu_fsm_root_assignment" name="Route Assignment" parent="menu_fsm_root"
