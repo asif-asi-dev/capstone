@@ -1,0 +1,53 @@
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_fsm_territory_form" model="ir.ui.view">
+        <field name="name">fsm.territory.form</field>
+        <field name="model">fsm.territory</field>
+        <field name="arch" type="xml">
+            <form string="Territory">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sales_incharge_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_territory_area_tree" model="ir.ui.view">
+        <field name="name">fsm.territory.tree</field>
+        <field name="model">fsm.territory</field>
+        <field name="arch" type="xml">
+            <tree string="Territory">
+                <field name="name"/>
+                <field name="sales_incharge_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_fsm_territory" model="ir.ui.view">
+        <field name="name">fsm.territory.search</field>
+        <field name="model">fsm.territory</field>
+        <field name="arch" type="xml">
+            <search string="Search FSM Territory">
+                <field name="name"/>
+                <field name="sales_incharge_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_fsm_territory" model="ir.actions.act_window">
+        <field name="name">FSM Territory</field>
+        <field name="res_model">fsm.territory</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_fsm_territory"/>
+    </record>
+
+    <!-- Menu Item -->
+
+</odoo>

@@ -18,7 +18,7 @@
                     <!-- Main Form Card -->
                     <div class="card border-0 shadow-lg" style="border-radius: 20px; backdrop-filter: blur(10px);">
                         <div class="card-body p-4 p-md-5">
-                            <form action="/complaint/submit" method="post" class="needs-validation" novalidate="true">
+                            <form action="/complaint/submit" method="post" class="needs-validation" novalidate="true" enctype="multipart/form-data">
                                 <div class="row g-4">
                                     <!-- Personal Information Section -->
                                     <div class="col-12">
@@ -149,6 +149,21 @@
                                             <div class="invalid-feedback">Please describe your complaint.</div>
                                         </div>
                                     </div>
+                                    <!-- Image Upload Fields -->
+<div class="col-12 col-md-6">
+    <label class="form-label text-muted">
+        <i class="fas fa-camera me-2 icon-fallback" data-fallback="📷"></i>Upload Image 1 (optional)
+    </label>
+    <input type="file" name="image_1" accept="image/*" class="form-control shadow-sm" style="border-radius: 15px; background: rgba(248, 249, 250, 0.8);"/>
+</div>
+
+<div class="col-12 col-md-6">
+    <label class="form-label text-muted">
+        <i class="fas fa-camera me-2 icon-fallback" data-fallback="📷"></i>Upload Image 2 (optional)
+    </label>
+    <input type="file" name="image_2" accept="image/*" class="form-control shadow-sm" style="border-radius: 15px; background: rgba(248, 249, 250, 0.8);"/>
+</div>
+
 
                                     <!-- Submit Button -->
                                     <div class="col-12 text-center">

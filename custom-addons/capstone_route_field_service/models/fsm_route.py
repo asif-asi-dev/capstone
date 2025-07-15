@@ -9,3 +9,4 @@ class FSMRoute(models.Model):
                                domain="[('is_company', '=', True)]")
     total_km = fields.Float(string='Total Distance (KM)')
     area_id =  fields.Many2one('fsm.area',string='Area')
+    territory_id = fields.Many2one('fsm.territory',string='Territory')

@@ -20,7 +20,7 @@ class ComplaintAssignment(models.Model):
     ], string='Status', default='draft', tracking=True)
 
     technician_id = fields.Many2one('res.users', string='Technician')
-    start_datetime = fields.Datetime(string='Start Time')
+    start_datetime = fields.Datetime(string='Start Time', related='complaint_id.create_date')
     end_datetime = fields.Datetime(string='End Time')
     warranty_status = fields.Selection([
         ('paid', 'Paid'),
@@ -70,6 +70,23 @@ class ComplaintAssignment(models.Model):
     repair_order_ids = fields.One2many(
         'repair.order', 'assignment_id', string="Repair Orders", compute="_compute_repair_orders", store=True
     )
+    hours_taken = fields.Float(string="Hours Taken", compute='_compute_hours_taken', store=True)
+
+    @api.depends('start_datetime', 'end_datetime')
+    def _compute_hours_taken(self):
+        for record in self:
+            if record.start_datetime and record.end_datetime:
+                delta = record.end_datetime - record.start_datetime
+                record.hours_taken = round(delta.total_seconds() / 3600, 2)
+            else:
+                record.hours_taken = 0.0
+
+    def write(self, vals):
+        # Automatically set end time when state is changed to 'done'
+        for record in self:
+            if vals.get('state') == 'done' and not record.end_datetime:
+                vals['end_datetime'] = fields.Datetime.now()
+        return super(ComplaintAssignment, self).write(vals)
 
     @api.depends('repair_order_ids')
     def _compute_repair_orders(self):

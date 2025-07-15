@@ -8,7 +8,8 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="area_id"/>
+                        <field name="area_id" invisible="1"/>
+                        <field name="territory_id"/>
                         <field name="total_km"/>
                         <field name="shop_ids" widget="many2many_tags"/>
                     </group>
@@ -23,7 +24,7 @@
         <field name="arch" type="xml">
             <tree string="Routes">
                 <field name="name"/>
-                <field name="area_id"/>
+                <field name="territory_id"/>
                 <field name="total_km"/>
             </tree>
         </field>
