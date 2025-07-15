@@ -97,9 +97,33 @@
                             </field>
                         </page>
                         <page string="Complaint Description">
-                            <field name="description" placeholder="Describe the issue as mentioned by the customer..."
-                                   readonly="state != 'draft'"/>
-                        </page>
+    <group>
+        <field name="description" placeholder="Describe the issue as mentioned by the customer..." readonly="state != 'draft'"/>
+    </group>
+
+    <group string="Uploaded Images">
+        <div class="d-flex flex-wrap gap-3 mt-3">
+            <field name="image_1" widget="image"
+                   class="oe_avatar"
+                   options="{'preview_image': 'image_1'}"
+                   style="width: 150px; height: 150px; object-fit: cover;"
+                   invisible="not image_1"
+            />
+            <field name="image_2" widget="image"
+                   class="oe_avatar"
+                   options="{'preview_image': 'image_2'}"
+                   style="width: 150px; height: 150px; object-fit: cover;"
+                   invisible="not image_2"
+            />
+        </div>
+
+        <group readonly="state != 'draft'">
+            <field name="image_1" widget="image" options="{'preview_image': 'image_1'}"/>
+            <field name="image_2" widget="image" options="{'preview_image': 'image_2'}"/>
+        </group>
+    </group>
+</page>
+
                         <page string="Reviews">
                             <field name="review_line_ids" readonly="1">
                                 <tree>

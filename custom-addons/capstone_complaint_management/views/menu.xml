@@ -2,7 +2,7 @@
 
      <menuitem
         id="menu_complaint_root"
-        name="Complaint Management"
+        name="Service Request"
         web_icon=""
         sequence="100"
     />

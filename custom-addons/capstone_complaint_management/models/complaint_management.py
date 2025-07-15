@@ -13,6 +13,8 @@ class ComplaintManagement(models.Model):
     complaint_type_ids = fields.Many2many('complaint.type', string='Complaint Types')
     purchased_shop_id = fields.Many2one('res.partner', string='Purchased Shop')
     purchase_date = fields.Date(string='Purchase Date')
+    image_1 = fields.Binary(string="Photo 1", attachment=True)
+    image_2 = fields.Binary(string="Photo 2", attachment=True)
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -52,6 +54,7 @@ class ComplaintManagement(models.Model):
             record.technician_id = (
                 record.assignment_ids.filtered(lambda a: a.technician_id)[:1].technician_id
             )
+
 
     @api.depends('assignment_ids.picking_ids')
     def _compute_related_pickings(self):

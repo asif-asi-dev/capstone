@@ -13,7 +13,7 @@ class RepairOrder(models.Model):
             if assignment and assignment.resolution_type == 'service':
                 # Check if all related repair orders are done
                 all_done = all(r.state == 'done' for r in assignment.repair_order_ids)
-                if all_done:
+                if all_done or repair.under_warranty:
                     assignment.write({'state': 'done'})
                     if assignment.complaint_id:
                         assignment.complaint_id.state = 'resolved'
