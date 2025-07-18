@@ -1,0 +1,106 @@
+<odoo>
+    <record id="view_sales_return_order_tree" model="ir.ui.view">
+        <field name="name">sales.return.order.tree</field>
+        <field name="model">sales.return.order</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Return Orders" create="false">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_sales_return_order_form" model="ir.ui.view">
+        <field name="name">sales.return.order.form</field>
+        <field name="model">sales.return.order</field>
+        <field name="arch" type="xml">
+            <form string="Sales Return Order" create="false">
+                <header>
+                    <button name="action_inspect"
+                            string="Mark as Inspected"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_complete"
+                            string="Complete Return"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'inspected'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_return_picking"
+                                type="object"
+                                class="btn btn-secondary o_stat_button"
+                                icon="fa-truck"
+                                invisible="not return_picking_id">
+                            <field name="return_picking_id"
+                                   string="Return Transfer"
+                                   widget="statinfo"
+                                   options="{'no_open': True}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <group>
+                    <group>
+                        <field name="picking_id" readonly="1"/>
+                        <field name="partner_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="return_reason" readonly="state != 'draft'"/>
+                        <field name="inspection_result" readonly="state != 'draft'"/>
+                    </group>
+                    <group>
+                        <field name="location_id" readonly="state != 'draft'" options="{'no_open': True}"/>
+                        <field name="location_dest_id" readonly="state != 'draft'" options="{'no_open': True}"/>
+                    </group>
+                    </group>
+                    <notebook>
+                        <page string="Return Lines">
+                            <field name="line_ids"  readonly="state != 'draft'">
+                                <tree editable="bottom" >
+                                    <field name="product_id" required="1"/>
+                                    <field name="quantity" required="1"/>
+                                    <field name="uom_id" required="1"/>
+                                    <field name="lot_id"
+                                           invisible="product_id.tracking == 'none'"
+                                           domain="[('product_id', '=', product_id)]"/>
+                                    <field name="reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_sales_return_order_search" model="ir.ui.view">
+        <field name="name">sales.return.order.search</field>
+        <field name="model">sales.return.order</field>
+        <field name="arch" type="xml">
+            <search string="Sales Return Orders Search">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_location" string="Source Location" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter name="group_by_dest_location" string="Destination Location" domain="[]" context="{'group_by': 'location_dest_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sales_return_order" model="ir.actions.act_window">
+        <field name="name">Sales Return Orders</field>
+        <field name="res_model">sales.return.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_sales_return_order_tree"/>
+        <field name="search_view_id" ref="view_sales_return_order_search"/>
+    </record>
+</odoo>
