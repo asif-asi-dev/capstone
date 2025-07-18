@@ -1,0 +1,4 @@
+<odoo>
+    <menuitem id="menu_sales_return_root" name="Sales Returns" sequence="10"/>
+    <menuitem id="menu_sales_return" name="Sales Returns" parent="menu_sales_return_root" action="action_sales_return_order"/>
+</odoo>

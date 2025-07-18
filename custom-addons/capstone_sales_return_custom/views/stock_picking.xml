@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_stock_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.return.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//button[@name='act_stock_return_picking']" position="attributes">-->
+<!--                <attribute name="invisible">1</attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//header/button[@name='button_validate']" position="after">
+                <button name="action_open_sales_return_order"
+                        string="Create Sales Return"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state != 'done' or picking_type_code != 'outgoing'"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button
+                        name="action_view_return_picking"
+                        type="object"
+                        class="btn btn-secondary o_stat_button"
+                        icon="fa-truck"
+                        invisible="not return_order_ids or picking_type_code != 'outgoing'">
+                    <field
+                            name="return_order_ids"
+                            string="Return Transfer"
+                            widget="statinfo"
+                            options="{'no_open': True}"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
