@@ -15,10 +15,10 @@ Long description of module's purpose
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.4',
+    'version': '17.0.1.5',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'sale', 'hr_expense', 'account'],
+    'depends': ['base', 'crm', 'sale', 'hr_expense', 'account', 'stock'],
 
     # always loaded
     'data': [
@@ -37,6 +37,8 @@ Long description of module's purpose
         'views/fsm_route_assignment_view.xml',
         'views/fsm_shop_visit_view.xml',
         'views/fsm_visit_master_view.xml',
+        'views/shop_delivery_route_view.xml',
+        'views/stock_picking_view.xml',
         'views/menu.xml',
 
     ],

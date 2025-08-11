@@ -1,0 +1,69 @@
+<odoo>
+    <record id="view_shop_delivery_route_tree" model="ir.ui.view">
+        <field name="name">shop.delivery.route.tree</field>
+        <field name="model">shop.delivery.route</field>
+        <field name="arch" type="xml">
+            <tree string="Shop Delivery Routes">
+                <field name="name"/>
+                <field name="sales_incharge_id"/>
+                <field name="line_ids" widget="one2many_list"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_shop_delivery_route_form" model="ir.ui.view">
+        <field name="name">shop.delivery.route.form</field>
+        <field name="model">shop.delivery.route</field>
+        <field name="arch" type="xml">
+            <form string="Shop Delivery Route">
+                <sheet>
+                    <group>
+                         <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="sales_incharge_id"/>
+                    </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Shops in Route">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="shop_id"/>
+                                    <field name="sequence"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_shop_delivery_route_search" model="ir.ui.view">
+        <field name="name">shop.delivery.route.search</field>
+        <field name="model">shop.delivery.route</field>
+        <field name="arch" type="xml">
+            <search string="Search Delivery Routes">
+                <field name="name"/>
+                <field name="sales_incharge_id"/>
+                <filter name="my_routes" string="My Routes" domain="[('sales_incharge_id','=',uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_shop_delivery_route" model="ir.actions.act_window">
+        <field name="name">Shop Delivery Routes</field>
+        <field name="res_model">shop.delivery.route</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Delivery Route.
+            </p>
+        </field>
+    </record>
+</odoo>

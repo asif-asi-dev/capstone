@@ -14,5 +14,10 @@
               parent="menu_fsm_root"
               action="action_fsm_shop_visit_master"
               sequence="21"/>
+    <menuitem id="menu_shop_delivery_route"
+              name="Shop Delivery Routes"
+              parent="menu_fsm_root"
+              action="action_shop_delivery_route"
+              sequence="22"/>
 
 </odoo>
