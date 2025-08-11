@@ -1,0 +1,48 @@
+<odoo>
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="delivery_route_id" invisible="0"/>
+                <field name="shop_sequence"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="view_picking_tree_grouped_by_route" model="ir.ui.view">
+            <field name="name">stock.picking.tree.grouped.route</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">delivery_route_id, shop_sequence, scheduled_date, id</attribute>
+                </xpath>
+
+                <!-- Add the delivery_route_id and shop_sequence fields to the tree -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="delivery_route_id" optional="show"/>
+                    <field name="shop_sequence" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="view_picking_tree_grouped_by_route" model="ir.ui.view">
+            <field name="name">stock.picking.tree.grouped.route</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_group_by">delivery_route_id</attribute>
+                <attribute name="default_order">delivery_route_id, shop_sequence, id</attribute>
+            </xpath>
+
+            <!-- Add the delivery_route_id and shop_sequence fields to the tree if not already present -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="delivery_route_id" optional="show"/>
+                <field name="shop_sequence" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

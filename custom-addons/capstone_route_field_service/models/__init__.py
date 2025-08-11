@@ -11,3 +11,5 @@ from . import res_partner
 from . import fsm_route_assignment
 from . import fsm_shop_visit_master
 from . import fsm_territory
+from . import shop_delivery_route
+from . import stock_picking
