@@ -19,16 +19,22 @@ class ComplaintController(http.Controller):
 
         image_1_file = files.get('image_1')
         image_2_file = files.get('image_2')
-        print(image_1_file,'______________________')
+        video_file = files.get('video_file')
 
         image_1 = False
         image_2 = False
+        video_data = False
+        video_filename = False
 
         if image_1_file:
-            image_1 = base64.b64encode(image_1_file.read())
+            image_1 = base64.b64encode(image_1_file.read()).decode('utf-8')
 
         if image_2_file:
-            image_2 = base64.b64encode(image_2_file.read())
+            image_2 = base64.b64encode(image_2_file.read()).decode('utf-8')
+
+        if video_file:
+            video_data = base64.b64encode(video_file.read()).decode('utf-8')
+            video_filename = video_file.filename
 
         partner = request.env['res.partner'].sudo().create({
             'name': post.get('customer_name'),
@@ -39,9 +45,12 @@ class ComplaintController(http.Controller):
         complaint = request.env['complaint.management'].sudo().create({
             'customer_id': partner.id,
             'purchased_shop_id': int(post.get('shop_id')),
+            'purchase_date': post.get('purchase_date'),
             'description': post.get('description'),
             'image_1': image_1,
             'image_2': image_2,
+            'video_file': video_data,
+            'video_filename': video_filename,
             'product_line_ids': [(0, 0, {
                 'product_id': int(post.get('product_id')),
                 'quantity': 1.0
@@ -49,3 +58,4 @@ class ComplaintController(http.Controller):
         })
 
         return request.render('capstone_complaint_management.template_complaint_thankyou', {'complaint': complaint})
+

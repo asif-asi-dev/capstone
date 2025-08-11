@@ -15,6 +15,8 @@ class ComplaintManagement(models.Model):
     purchase_date = fields.Date(string='Purchase Date')
     image_1 = fields.Binary(string="Photo 1", attachment=True)
     image_2 = fields.Binary(string="Photo 2", attachment=True)
+    video_file = fields.Binary(string="Complaint Video", attachment=True)
+    video_filename = fields.Char(string="Video Filename")
 
     state = fields.Selection([
         ('draft', 'Draft'),

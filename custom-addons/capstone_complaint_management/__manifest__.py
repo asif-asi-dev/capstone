@@ -10,7 +10,7 @@ Long description of module's purpose
     'author': "My Company",
     'website': "https://www.yourcompany.com",
     'category': 'Uncategorized',
-    'version': '17.0.0.4',
+    'version': '17.0.0.5',
     'depends': ['base', 'stock', 'account', 'mail', 'repair'],
     'data': [
         'security/security.xml',

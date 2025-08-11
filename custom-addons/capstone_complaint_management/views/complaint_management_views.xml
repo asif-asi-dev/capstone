@@ -120,6 +120,18 @@
         <group readonly="state != 'draft'">
             <field name="image_1" widget="image" options="{'preview_image': 'image_1'}"/>
             <field name="image_2" widget="image" options="{'preview_image': 'image_2'}"/>
+            <field name="video_file" invisible="0"/>
+<field name="video_filename" invisible="1"/>
+
+<!--&lt;!&ndash; Video Preview &ndash;&gt;-->
+<!--<widget name="html" readonly="1">-->
+<!--    <div t-if="record.video_file.raw_value">-->
+<!--        <video width="320" height="240" controls>-->
+<!--            <source t-att-src="'data:video/mp4;base64,' + record.video_file.raw_value" type="video/mp4"/>-->
+<!--            Your browser does not support the video tag.-->
+<!--        </video>-->
+<!--    </div>-->
+<!--</widget>-->
         </group>
     </group>
 </page>
