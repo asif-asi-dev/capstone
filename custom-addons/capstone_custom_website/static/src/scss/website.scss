@@ -1,0 +1,441 @@
+// Import Bootstrap variables for overrides (if needed)
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+// Custom Variables (adjust these to match your brand colors and fonts)
+$primary-color: #2c3e50; // Dark Blue/Grey for text, buttons
+$secondary-color: #3498db; // Lighter Blue for accents
+$accent-color: #e67e22; // Orange for highlights
+$light-bg-color: #f8f9fa;
+$dark-text-color: #343a40;
+$light-text-color: #6c757d;
+
+// Custom Font Stacks (Google Fonts recommended: e.g., 'Montserrat', 'Open Sans')
+$heading-font: 'Montserrat', sans-serif;
+$body-font: 'Open Sans', sans-serif;
+
+// Global Styles
+.capstone-homepage-improved {
+    font-family: $body-font;
+    color: $dark-text-color;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: $heading-font;
+        color: $primary-color;
+        font-weight: 700;
+    }
+
+    .section-title {
+        font-size: 2.5rem; // ~40px
+        margin-bottom: 0.5rem;
+        position: relative;
+        padding-bottom: 15px; // Space for underline
+        &:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: $secondary-color;
+            border-radius: 2px;
+        }
+    }
+
+    .section-subtitle {
+        font-size: 1.15rem; // ~18px
+        color: $light-text-color;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .btn-primary {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+        transition: all 0.3s ease;
+        &:hover {
+            background-color: darken($secondary-color, 10%);
+            border-color: darken($secondary-color, 10%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba($secondary-color, 0.3);
+        }
+    }
+
+    .btn-outline-primary {
+        color: $secondary-color;
+        border-color: $secondary-color;
+        &:hover {
+            background-color: $secondary-color;
+            color: #fff;
+        }
+    }
+
+    // Hero Section
+    .hero-section {
+        height: 70vh; // Adjust as needed
+        background: linear-gradient(to right, $primary-color, darken($primary-color, 15%)); // Darker gradient
+        color: #fff;
+        overflow: hidden; // Hide overflow from wave
+        padding-top: 80px; // Space for potential fixed header
+
+        .water-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            // Placeholder for actual water animation (e.g., particles.js, CSS animation, canvas)
+            // background: rgba(255, 255, 255, 0.05); // Subtle overlay
+            // animation: ripple 10s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); // Example animation
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-size: 4.5rem; // Adjust for larger screens
+            font-weight: 800;
+            text-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        .btn-explore {
+            font-size: 1.2rem;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            line-height: 0;
+            transform: rotate(180deg); // Flip to be a bottom wave
+            svg {
+                display: block;
+                width: calc(100% + 1.3px);
+                height: 120px; // Adjust wave height
+            }
+            path {
+                fill: var(--bs-white); // Use Bootstrap variable for consistency with template
+            }
+        }
+
+        @media (max-width: 768px) {
+            height: 60vh;
+            .hero-title {
+                font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            .btn-explore {
+                font-size: 1rem;
+                padding: 0.7rem 2rem;
+            }
+        }
+    }
+
+    // About Section
+    .about-section {
+        .about-banner {
+            position: relative;
+            min-height: 350px; // Ensure a minimum height for the banner
+            .about-banner-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .banner-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba($primary-color, 0.8); // Darker overlay
+                color: #fff;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+        .about-content {
+            p {
+                line-height: 1.8;
+                margin-bottom: 1rem;
+                color: $light-text-color;
+            }
+        }
+    }
+
+    // Features Section
+    .features-section {
+        .feature-card {
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+            .feature-icon {
+                color: $secondary-color;
+                font-size: 2.5rem; // Larger icon
+                margin-bottom: 1rem;
+            }
+            .feature-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+            .feature-description {
+                font-size: 0.95rem;
+                color: $light-text-color;
+            }
+        }
+    }
+
+    // Products Section
+    .products-section {
+        .category-title {
+            font-size: 2.5rem; // Adjust for category titles
+            margin-bottom: 2rem;
+            color: $primary-color;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); // Responsive grid
+            gap: 30px; // Spacing between cards
+            justify-content: center; // Center items if not filling all columns
+
+            .product-item {
+                .product-card {
+                    display: flex;
+                    flex-direction: column;
+                    border: none;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                    transition: all 0.3s ease;
+                    border-radius: 8px;
+                    overflow: hidden;
+
+                    &:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                    }
+
+                    .product-image-wrapper {
+                        height: 220px; // Fixed height for image area
+                        background-color: #fff;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        border-bottom: 1px solid #f0f0f0;
+
+                        .product-img {
+                            max-height: 100%;
+                            width: auto;
+                            object-fit: contain; // Ensure image fits without cropping
+                            display: block;
+                            transition: transform 0.3s ease;
+                            &:hover {
+                                transform: scale(1.05); // Subtle zoom on hover
+                            }
+                        }
+
+                        .placeholder-image {
+                            height: 100%;
+                            width: 100%;
+                            background-color: $light-bg-color;
+                            color: $light-text-color;
+                            font-size: 3rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    }
+
+                    .product-info {
+                        padding: 1rem;
+                        flex-grow: 1; // Allows info to take remaining space
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: space-between; // Push button to bottom
+                        text-align: center;
+
+                        .product-name {
+                            font-size: 1.25rem;
+                            font-weight: 600;
+                            color: $primary-color;
+                            margin-bottom: 0.5rem;
+                            white-space: nowrap; // Prevent wrapping for better truncation
+                            overflow: hidden;
+                            text-overflow: ellipsis; // Show ellipsis for truncated text
+                            width: 100%; // Important for text-overflow to work
+                        }
+
+                        .product-price {
+                            font-size: 1.1rem;
+                            color: $secondary-color;
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Brochure Gallery
+    .gallery-section {
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+
+            .gallery-item {
+                .gallery-image {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 8px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                    transition: transform 0.3s ease;
+
+                    &:hover {
+                        transform: translateY(-5px);
+                    }
+
+                    img {
+                        width: 100%;
+                        height: 250px; // Fixed height for gallery images
+                        object-fit: cover;
+                        display: block;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .gallery-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba($primary-color, 0.8);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                        flex-direction: column;
+                        text-align: center;
+                        padding: 1.5rem;
+
+                        &:hover {
+                            opacity: 1;
+                        }
+
+                        .overlay-content {
+                            color: #fff;
+                            h5 {
+                                color: #fff;
+                                font-size: 1.5rem;
+                                margin-bottom: 0.5rem;
+                            }
+                            p {
+                                font-size: 0.95rem;
+                                color: rgba(255, 255, 255, 0.9);
+                                margin-bottom: 1rem;
+                            }
+                            .btn-light {
+                                background-color: #fff;
+                                color: $primary-color;
+                                border-color: #fff;
+                                &:hover {
+                                    background-color: lighten($primary-color, 20%);
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // CTA Section
+    .contact-section {
+        .contact-card {
+            background: linear-gradient(to right, $secondary-color, lighten($secondary-color, 15%));
+            color: #fff;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .contact-title {
+                color: #fff;
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .contact-text {
+                font-size: 1.1rem;
+                opacity: 0.9;
+            }
+
+            .btn-contact-custom {
+                background-color: #fff;
+                color: $secondary-color;
+                font-weight: 600;
+                padding: 0.8rem 2rem;
+                border-radius: 50px;
+                transition: all 0.3s ease;
+                &:hover {
+                    background-color: lighten($primary-color, 20%);
+                    color: #fff;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                }
+            }
+
+            @media (max-width: 768px) {
+                flex-direction: column;
+                text-align: center;
+                .contact-content {
+                    margin-bottom: 1.5rem;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+
+// Animate.css Integration (Optional, but highly recommended for modern feel)
+// Add these lines to your Odoo assets to link Animate.css
+/*
+    <link href="/capstone_custom_website/static/lib/animate/animate.min.css" rel="stylesheet"/>
+*/
+// You'll need to download animate.min.css and place it in capstone_custom_website/static/lib/animate/
+
+// Custom animations (if you want to expand beyond animate.css)
+// @keyframes ripple {
+//     0% { transform: scale(0.8); opacity: 0.2; }
+//     50% { transform: scale(1.1); opacity: 0.4; }
+//     100% { transform: scale(0.8); opacity: 0.2; }
+// }
