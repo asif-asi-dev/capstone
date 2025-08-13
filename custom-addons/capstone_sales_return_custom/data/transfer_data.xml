@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- New Virtual Location -->
+    <record id="location_virtual_sales_return" model="stock.location">
+        <field name="name">Virtual Sales Return Location</field>
+        <field name="usage">internal</field>
+        <field name="company_id" eval="False"/> <!-- Use False for shared -->
+    </record>
+
+    <!-- Picking Type using this new location as default destination -->
+    <record id="picking_type_sales_return" model="stock.picking.type">
+        <field name="name">Sales Return Transfer</field>
+        <field name="code">internal</field>  <!-- Internal transfer -->
+        <field name="sequence_code">SRT</field>
+
+        <!-- Default locations -->
+        <field name="default_location_src_id" ref="stock.stock_location_customers"/>  <!-- Customer location -->
+        <field name="default_location_dest_id" ref="location_virtual_sales_return"/>  <!-- Your new virtual location -->
+    </record>
+</odoo>
