@@ -125,8 +125,8 @@ class SaleReturnRequest(models.Model):
             if rec.state != 'draft':
                 continue
             picking_type = self.env.ref('capstone_sales_return_custom.picking_type_sales_return')
-            if not rec.destination_location_id.warehouse_id or not rec.destination_location_id.location_id:
-                raise ValidationError(_('The destination location must be assigned to a warehouse and have a parent location.'))
+            # if not rec.destination_location_id.warehouse_id or not rec.destination_location_id.location_id:
+            #     raise ValidationError(_('The destination location must be assigned to a warehouse and have a parent location.'))
 
 
             if rec.product_id.tracking != 'none' and rec.lot_id:
