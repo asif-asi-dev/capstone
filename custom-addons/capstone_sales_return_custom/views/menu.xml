@@ -1,4 +1,32 @@
 <odoo>
-    <menuitem id="menu_sales_return_root" name="Sales Returns" sequence="10"/>
-    <menuitem id="menu_sales_return" name="Sales Returns" parent="menu_sales_return_root" action="action_sales_return_order"/>
+    <menuitem id="menu_sales_return_root" name="Sales Return" sequence="10"/>
+    <menuitem id="menu_sales_return" name="Sales Return Orders" parent="menu_sales_return_root"
+              sequence="10"
+              action="action_sales_return_order"/>
+
+    <menuitem id="menu_sale_return_requests"
+              name="Return Requests"
+              parent="menu_sales_return_root"
+              action="capstone_sales_return_custom.action_sale_return_request"
+              sequence="5"/>
+
+    <menuitem id="menu_sale_return_configuration"
+              name="Configurations"
+              parent="menu_sales_return_root"
+              sequence="50"/>
+    <menuitem id="menu_sale_return_reasons_master"
+              name="Sale Return Reason"
+              parent="menu_sale_return_configuration"
+              action="capstone_sales_return_custom.action_return_reason"
+              sequence="50"/>
+    <menuitem id="menu_inspection_master"
+              name="Inspection Result"
+              parent="menu_sale_return_configuration"
+              action="capstone_sales_return_custom.action_inspection_result"
+              sequence="51"/>
+    <menuitem id="menu_custom_invoice_scrap_sale"
+              name="Scrap Sale"
+              parent="sale.sale_order_menu"
+              sequence="100"
+              action="action_custom_invoice_scrap_sale"/>
 </odoo>

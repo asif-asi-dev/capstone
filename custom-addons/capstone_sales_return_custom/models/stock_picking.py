@@ -12,6 +12,10 @@ class StockPicking(models.Model):
         string="Return Orders",
         readonly=True
     )
+    return_order_id = fields.Many2one(
+        'sales.return.order',
+        string="Return Order",
+        readonly=True)
 
 
     def action_open_sales_return_order(self):
