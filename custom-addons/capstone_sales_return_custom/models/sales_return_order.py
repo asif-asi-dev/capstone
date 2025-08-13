@@ -8,61 +8,12 @@ class SalesReturnOrder(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
-    @api.model
-    def default_get(self, fields):
-        res = super(SalesReturnOrder, self).default_get(fields)
-        picking_id = self.env.context.get('default_picking_id')
-        if picking_id:
-            picking = self.env['stock.picking'].browse(picking_id)
-            picking_type = self.env['stock.picking.type'].search([
-                ('code', '=', 'incoming'),
-                ('warehouse_id', '=', picking.picking_type_id.warehouse_id.id)
-            ], limit=1)
-            if not picking_type:
-                raise UserError(_("No return picking type found for this warehouse."))
-            if not picking.exists():
-                return res
-
-            lines = []
-            for move in picking.move_line_ids_without_package:
-                if not move.product_id:
-                    continue
-                lines.append((0, 0, {
-                    'product_id': move.product_id.id,
-                    'quantity': move.quantity,
-                    'lot_id':move.lot_id.id,
-                    'uom_id': move.product_uom_id.id,
-                }))
-            res.update({
-                'line_ids': lines,
-                'picking_id': picking_id,
-                'partner_id': picking.partner_id.id,
-                'location_id': picking.location_dest_id.id,
-                'location_dest_id':picking_type.default_location_dest_id.id
-            })
-        return res
-
     name = fields.Char(string='Reference', required=True, readonly=True, default=lambda self: _('New'))
     picking_id = fields.Many2one('stock.picking', string="Delivery")
     partner_id = fields.Many2one('res.partner', string="Customer", required=True)
-
-    return_reason = fields.Selection([
-        ('no_sale', 'No Sale'),
-        ('wrong_delivery', 'Wrong Delivery'),
-        ('manufacturing_defect', 'Manufacturing Defect'),
-        ('damaged', 'Damaged'),
-    ], string="Return Reason", required=True, tracking=True)
-
-    inspection_result = fields.Selection([
-        ('salable', 'Salable'),
-        ('manufacturing_defect_return', 'Manufacturing Defect'),
-        ('recyclable', 'Recyclable'),
-        ('dump', 'Dump'),
-        ('no_complaints', 'No Complaints'),
-    ], string="Inspection Result", required=True, tracking=True)
-
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('processing', 'Under Inspection'),
         ('inspected', 'Inspected'),
         ('completed', 'Completed'),
     ], string="Status", default='draft', tracking=True)
@@ -74,22 +25,26 @@ class SalesReturnOrder(models.Model):
         string="Source Location",
         help="Location from which the product is taken."
     )
-
-    location_dest_id = fields.Many2one(
-        'stock.location',
-        string="Destination Location",
-        help="Location to which the product is moved."
+    product_id = fields.Many2one('product.product', string="Product")
+    quantity = fields.Float(string="Quantity")
+    reason_id = fields.Many2one(
+        'return.reason',
+        string='Return Reason'
     )
+    return_request_id = fields.Many2one(
+        'sale.return.request',
+        string='Return Request'
+    )
+    picking_ids = fields.One2many('stock.picking', 'return_order_id', string='Pickings')
 
-
-    def action_view_return_picking(self):
+    def action_view_return_pickings(self):
         self.ensure_one()
         return {
-            'name': _('Return Transfer'),
+            'name': _('Return Transfers'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'form',
+            'view_mode': 'tree,form',
             'res_model': 'stock.picking',
-            'res_id': self.return_picking_id.id,
+            'domain': [('id', 'in', self.picking_ids.ids)],
             'context': {'create': False, 'edit': False}
         }
 
@@ -107,9 +62,14 @@ class SalesReturnOrder(models.Model):
         return records
     def action_inspect(self):
         self.write({'state': 'inspected'})
+    def action_process(self):
+        self.return_request_id.state = 'processing'
+        self.write({'state': 'processing'})
+
 
     def action_complete(self):
         self.create_return_picking()
+        self.return_request_id.state = 'done'
         self.write({'state': 'completed'})
 
     def create_return_picking(self):
@@ -117,23 +77,31 @@ class SalesReturnOrder(models.Model):
         if not self.line_ids:
             raise UserError(_("Please add return lines before completing."))
 
-        picking_type = self.env['stock.picking.type'].search([
-            ('code', '=', 'incoming'),
-            ('warehouse_id', '=', self.picking_id.picking_type_id.warehouse_id.id)
-        ], limit=1)
-
-        if not picking_type:
-            raise UserError(_("No return picking type found for this warehouse."))
-
         move_lines = []
+        pickings_to_add = []
         for line in self.line_ids:
+            warehouse = self.env['stock.warehouse'].search([
+                ('company_id', '=', self.env.company.id)
+            ], limit=1)
+
+            if not warehouse:
+                raise UserError(_("No warehouse found for the current company."))
+
+            # Get incoming picking type for that warehouse
+            picking_type = self.env['stock.picking.type'].search([
+                ('code', '=', 'incoming'),
+                ('warehouse_id', '=', warehouse.id)
+            ], limit=1)
+
+            if not picking_type:
+                raise UserError(_("No return picking type found for this warehouse."))
             move_vals = {
                 'name': line.product_id.name,
                 'product_id': line.product_id.id,
                 'product_uom_qty': line.quantity,
                 'product_uom': line.uom_id.id,
                 'location_id': self.location_id.id,
-                'location_dest_id':self.location_dest_id.id,
+                'location_dest_id':line.location_dest_id.id,
             }
 
             # Add lot/serial number if tracking is enabled
@@ -141,45 +109,99 @@ class SalesReturnOrder(models.Model):
                 move_vals['move_line_ids'] = [(0, 0, {
                     'product_id': line.product_id.id,
                     'product_uom_id': line.uom_id.id,
-                    'location_id': self.picking_id.location_dest_id.id,
-                    'location_dest_id': picking_type.default_location_dest_id.id,
+                    'location_id': self.location_id.id,
+                    'location_dest_id': line.location_dest_id.id,
                     'quantity': line.quantity,
                     'lot_id': line.lot_id.id,
                 })]
 
-            move_lines.append((0, 0, move_vals))
+            # move_lines.append((0, 0, move_vals))
 
-        return_picking = self.env['stock.picking'].create({
-            'partner_id': self.partner_id.id,
-            'picking_type_id': picking_type.id,
-            'location_id': self.picking_id.location_dest_id.id,
-            'location_dest_id': picking_type.default_location_dest_id.id,
-            'origin': self.name,
-            'move_ids_without_package': move_lines,
-        })
+            return_picking = self.env['stock.picking'].create({
+                'partner_id': self.partner_id.id,
+                'picking_type_id': picking_type.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': line.location_dest_id.id,
+                'origin': self.name,
+                'move_ids_without_package': [(0, 0, move_vals)],
+            })
 
         # Automatically validate the picking
-        if return_picking.state != 'done':
-            return_picking.button_validate()
+            if return_picking.state != 'done':
+                return_picking.button_validate()
+            pickings_to_add.append((4, return_picking.id))
 
-        self.return_picking_id = return_picking.id
-
-        return {
-            'name': _('Return Transfer'),
-            'view_mode': 'form',
-            'res_model': 'stock.picking',
-            'res_id': return_picking.id,
-            'type': 'ir.actions.act_window',
-            'context': {'create': False},
-        }
+        self.picking_ids = pickings_to_add
 
 class SalesReturnOrderLine(models.Model):
     _name = 'sales.return.order.line'
     _description = 'Sales Return Order Line'
+    _order = 'id'
 
     return_order_id = fields.Many2one('sales.return.order', string="Return Order", required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Return Quantity", required=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one('uom.uom', string="Unit of Measure", required=True)
     lot_id = fields.Many2one('stock.lot', string="Lot/Serial Number")
-    reason = fields.Char(string="Remarks")
+    remarks = fields.Char(string="Remarks")
+    location_dest_id = fields.Many2one(
+        'stock.location',
+        string="Destination Location",
+        help="Location to which the product is moved."
+    )
+    inspection_result_id = fields.Many2one(
+        'inspection.result',
+        string='Inspection Result'
+    )
+    inspection_result = fields.Selection([
+        ('salable', 'Salable'),
+        ('scrap', 'Scrap'),
+        ('scrap_dump', 'Scrap Dump'),
+        ('recyclable', 'Recyclable'),
+        ('manufacturing_defect', 'Manufacturing Defect'),
+    ], string="Inspection Result",default='salable')
+
+
+    @api.onchange('inspection_result_id')
+    def _onchange_inspection_result_id(self):
+        if self.inspection_result_id:
+            self.location_dest_id = self.inspection_result_id.location_dest_id
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.uom_id = self.product_id.uom_id
+
+    @api.onchange('inspection_result')
+    def _onchange_inspection_result(self):
+        if not self.inspection_result:
+            return
+
+        # Get current company's warehouse
+        warehouse = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
+
+        if not warehouse:
+            return
+
+        # Map selection values to location boolean fields
+        result_to_field = {
+            'scrap': 'is_scrap_location',
+            'scrap_dump': 'is_scrap_dump_location',
+            'recyclable': 'is_recyclable_location',
+            'manufacturing_defect': 'is_manufacturing_defect_location',
+        }
+
+        if self.inspection_result == 'salable':
+            # Lot stock location for the warehouse
+            self.location_dest_id = warehouse.lot_stock_id.id
+        else:
+            # Find the corresponding location by boolean field
+            boolean_field = result_to_field.get(self.inspection_result)
+            if boolean_field:
+                location = self.env['stock.location'].search([
+                    (boolean_field, '=', True),
+                    ('company_id', '=', self.env.company.id),
+                    ('location_id', '=', warehouse.view_location_id.id)
+                ], limit=1)
+                self.location_dest_id = location.id if location else False

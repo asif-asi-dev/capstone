@@ -1,0 +1,100 @@
+<odoo>
+    <record id="view_sale_return_request_tree" model="ir.ui.view">
+        <field name="name">sale.return.request.tree</field>
+        <field name="model">sale.return.request</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Return Requests">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="product_uom_qty" string="Sale Quantity"/>
+                <field name="invoice_id" string="Invoice"/>
+                <field name="sale_order_id" string="Sale Order"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sale_return_request_form" model="ir.ui.view">
+        <field name="name">sale.return.request.form</field>
+        <field name="model">sale.return.request</field>
+        <field name="arch" type="xml">
+            <form string="Sales Return Request">
+                <!-- Set reference as the form title -->
+                <header>
+                    <button name="action_submit_return_request"
+                            string="Submit"
+                            type="object"
+                            invisible="state != 'draft'"
+                            class="oe_highlight"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,processing,done,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_return_request_picking"
+                                type="object"
+                                class="btn btn-secondary o_stat_button"
+                                icon="fa-truck"
+                                invisible="not return_request_picking_id">
+                            <field name="return_request_picking_id"
+                                   string="Return Transfer"
+                                   widget="statinfo"
+                                   options="{'no_open': True}"/>
+                        </button>
+                        <button name="action_view_return_order"
+                                type="object"
+                                class="btn btn-secondary o_stat_button"
+                                icon="fa-archive"
+                                invisible="not return_order_id">
+                            <field name="return_order_id"
+                                   string="Return Order"
+                                   widget="statinfo"
+                                   options="{'no_open': True}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" class="oe_inline" placeholder="New"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" options="{'no_open': True}" readonly="state != 'draft'"/>
+                            <field name="product_id" required="1" options="{'no_open': True}" readonly="state != 'draft'"/>
+                            <field name="uom_id" required="1" readonly="1" options="{'no_open': True}" force_save="1"/>
+                            <field name="lot_id" readonly="state != 'draft'" options="{'no_open': True}"/>
+                            <field name="source_location_id" readonly="1" options="{'no_open': True}" />
+                            <field name="destination_location_id" readonly="1" options="{'no_open': True}"/>
+
+                        </group>
+                        <group>
+                            <field name="invoice_id" domain="invoice_ids_domain" string="Invoice" options="{'no_open': True}" readonly="state != 'draft'"/>
+                            <field name="invoice_ids_domain" invisible="1" readonly="state != 'draft'"/>
+                            <field name="sale_order_id" string="Sale Order" readonly="1" force_save="1" options="{'no_open': True}"/>
+                            <field name="product_uom_qty" string="Sale Quantity" force_save="1" options="{'no_open': True}" readonly="state != 'draft'"/>
+                            <field name="return_qty" readonly="state != 'draft'"/>
+                            <field name="return_order_id" readonly="1" invisible="1"/>
+                            <field name="return_request_picking_id" invisible="1" readonly="state != 'draft'"/>
+                            <field name="reason_id" options="{'no_open': True}" readonly="state != 'draft'"/>
+                            <field name="notes" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_sale_return_request" model="ir.actions.act_window">
+        <field name="name">Sales Return Request</field>
+        <field name="res_model">sale.return.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="views" eval="[
+        (ref('view_sale_return_request_tree'), 'tree'),
+        (ref('view_sale_return_request_form'), 'form')
+    ]"/>
+    </record>
+
+</odoo>

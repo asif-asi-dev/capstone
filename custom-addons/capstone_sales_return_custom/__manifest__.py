@@ -29,8 +29,12 @@ Long description of module's purpose
     'data': [
         'security/ir.model.access.csv',
         'data/sequence.xml',
-        'views/stock_picking.xml',
+        'data/transfer_data.xml',
+        # 'views/stock_picking.xml',
         'views/sales_return_order.xml',
+        'views/sale_return_request.xml',
+        'views/return_reason.xml',
+        'views/scrap_sale.xml',
         'views/menu.xml',
     ],
 
