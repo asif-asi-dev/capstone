@@ -96,10 +96,25 @@ class SaleReturnRequest(models.Model):
         'stock.location',
         string='Destination Location',
         required=True,
-        default=lambda self: self.env.ref('capstone_sales_return_custom.location_virtual_sales_return').id
-    )
+        readonly=True,
+        compute='_compute_destination_location',    )
     return_request_picking_id = fields.Many2one('stock.picking', string='Return Request Picking')
+    picking_type_id = fields.Many2one(
+        'stock.picking.type',
+        string='Picking Type',
+        readonly=True,
+        default=lambda self: self.env.ref(
+            'capstone_sales_return_custom.picking_type_sales_return', raise_if_not_found=False
+        )
+    )
 
+    @api.depends('picking_type_id')
+    def _compute_destination_location(self):
+        for rec in self:
+            if rec.picking_type_id and rec.picking_type_id.default_location_dest_id:
+                rec.destination_location_id = rec.picking_type_id.default_location_dest_id
+            else:
+                raise ValidationError(_('NO default destination location is set for the picking type Sales Return Transfer'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -124,15 +139,11 @@ class SaleReturnRequest(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 continue
-            picking_type = self.env.ref('capstone_sales_return_custom.picking_type_sales_return')
-            # if not rec.destination_location_id.warehouse_id or not rec.destination_location_id.location_id:
-            #     raise ValidationError(_('The destination location must be assigned to a warehouse and have a parent location.'))
-
-
             if rec.product_id.tracking != 'none' and rec.lot_id:
                 move_line_vals = {
                     'product_id': rec.product_id.id,
                     'product_uom_id': rec.uom_id.id,
+                    'quantity_product_uom': rec.return_qty,
                     'quantity': rec.return_qty,  # ✅ CORRECT FIELD
                     'location_id': rec.source_location_id.id,
                     'location_dest_id': rec.destination_location_id.id,
@@ -142,6 +153,7 @@ class SaleReturnRequest(models.Model):
                 move_line_vals = {
                     'product_id': rec.product_id.id,
                     'product_uom_id': rec.uom_id.id,
+                    'quantity_product_uom': rec.return_qty,
                     'quantity': rec.return_qty,  # ✅ CORRECT FIELD
                     'location_id': rec.source_location_id.id,
                     'location_dest_id': rec.destination_location_id.id,
@@ -150,7 +162,7 @@ class SaleReturnRequest(models.Model):
             # Create everything in one operation ✅
             return_picking_request = StockPicking.create({
                 'partner_id': rec.partner_id.id,
-                'picking_type_id': picking_type.id,
+                'picking_type_id': rec.picking_type_id.id,
                 'location_id': rec.source_location_id.id,
                 'location_dest_id': rec.destination_location_id.id,
                 'origin': rec.name,
@@ -160,7 +172,7 @@ class SaleReturnRequest(models.Model):
                     'location_dest_id': rec.destination_location_id.id,
                     'product_id': rec.product_id.id,
                     'product_uom': rec.uom_id.id,
-                    'product_uom_qty': rec.product_uom_qty,
+                    'product_uom_qty': rec.return_qty,
                     'move_line_ids': [(0, 0, move_line_vals)],  # ✅ DIRECT CREATION
                 })],
             })
