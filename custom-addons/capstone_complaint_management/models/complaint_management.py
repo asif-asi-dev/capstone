@@ -33,8 +33,8 @@ class ComplaintManagement(models.Model):
     description = fields.Text(string='Complaint Description')
     picking_ids = fields.Many2many('stock.picking', compute='_compute_related_pickings', string="Return Pickings", store=True)
     repair_order_ids = fields.Many2many('repair.order', compute='_compute_related_repairs', string="Repairs", store=True)
-    picking_count = fields.Integer(compute='_compute_related_pickings', string="Picking Count")
-    repair_count = fields.Integer(compute='_compute_related_repairs', string="Repair Count")
+    picking_count = fields.Integer(compute='_compute_related_pickings', string="Picking Count", store=True)
+    repair_count = fields.Integer(compute='_compute_related_repairs', string="Repair Count", store=True)
     customer_rating = fields.Selection(
         [('1', '1 Star'), ('2', '2 Stars'), ('3', '3 Stars'), ('4', '4 Stars'), ('5', '5 Stars')],
         string="Customer Rating"
@@ -56,8 +56,32 @@ class ComplaintManagement(models.Model):
             record.technician_id = (
                 record.assignment_ids.filtered(lambda a: a.technician_id)[:1].technician_id
             )
+        # Optional: Method to get video attachment
 
+    def get_video_attachment(self):
+        """Get the video attachment record"""
+        self.ensure_one()
+        if self.video_file:
+            attachment = self.env['ir.attachment'].search([
+                ('res_model', '=', self._name),
+                ('res_id', '=', self.id),
+                ('res_field', '=', 'video_file')
+            ], limit=1)
+            return attachment
+        return False
 
+    def action_delete_video(self):
+        """Completely delete the video file from database (ir.attachment)."""
+        for record in self:
+            attachment = record.get_video_attachment()
+            if attachment:
+                # remove linked ir.attachment records
+                attachment.unlink()
+                # clear the fields on the complaint
+                record.write({
+                    'video_file': False,
+                    'video_filename': False,
+                })
     @api.depends('assignment_ids.picking_ids')
     def _compute_related_pickings(self):
         for record in self:

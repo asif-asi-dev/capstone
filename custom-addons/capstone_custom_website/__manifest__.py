@@ -1,6 +1,6 @@
 {
     'name': 'Capstone Custom Website',
-    'version': '17.0.1.0.0',
+    'version': '17.0.1.0.1',
     'category': 'Website',
     'summary': 'Custom homepage for Capstone Bath Fittings',
     'description': """

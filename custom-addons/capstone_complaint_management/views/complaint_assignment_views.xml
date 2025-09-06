@@ -78,32 +78,39 @@
                             <field name="end_datetime" readonly="1"/>
                             <field name="hours_taken"/>
                             <field name="return_location_id"
-                                   invisible="resolution_type not in  ('return','replacement')" required="resolution_type not in ('service')"/>
-                            <field name="warranty_status" invisible="resolution_type not in  ('service')" readonly="state != 'draft'"/>
+                                   invisible="resolution_type not in  ('return','replacement')"
+                                   required="resolution_type not in ('service')"/>
+                            <field name="warranty_status" invisible="resolution_type not in  ('service')"
+                                   readonly="state != 'draft'"/>
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
 
     <record id="view_complaint_assignment_search" model="ir.ui.view">
-    <field name="name">complaint.assignment.search</field>
-    <field name="model">complaint.assignment</field>
-    <field name="arch" type="xml">
-        <search string="Complaint Assignments">
-            <field name="name" string="Reference / Technician"
+        <field name="name">complaint.assignment.search</field>
+        <field name="model">complaint.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Complaint Assignments">
+                <field name="name" string="Reference / Technician"
                        filter_domain="['|',('name','ilike',self),('technician_id','ilike',self)]"/>
-            <field name="name" string="Complaint"
+                <field name="name" string="Complaint"
                        filter_domain="[('complaint_id.name','ilike',self)]"/>
-            <field name="state"/>
-            <field name="resolution_type"/>
-            <field name="start_datetime"/>
-            <field name="end_datetime"/>
-            <field name="repair_order_ids" string="Services"
-                   filter_domain="[('repair_order_ids.name','ilike',self)]"/>
-             <field name="picking_ids" string="Return or replacement"
-                   filter_domain="[('picking_ids.name','ilike',self)]"/>
+                <field name="state"/>
+                <field name="resolution_type"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="repair_order_ids" string="Services"
+                       filter_domain="[('repair_order_ids.name','ilike',self)]"/>
+                <field name="picking_ids" string="Return or replacement"
+                       filter_domain="[('picking_ids.name','ilike',self)]"/>
                 <!-- State Filters -->
                 <separator/>
                 <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
@@ -112,12 +119,14 @@
                 <!-- Group By -->
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter name="group_technician" string="Technician" domain="[]" context="{'group_by':'technician_id'}"/>
-                    <filter name="group_resolution_type" string="Resolution Type" domain="[]" context="{'group_by':'resolution_type'}"/>
+                    <filter name="group_technician" string="Technician" domain="[]"
+                            context="{'group_by':'technician_id'}"/>
+                    <filter name="group_resolution_type" string="Resolution Type" domain="[]"
+                            context="{'group_by':'resolution_type'}"/>
                     <filter name="group_state" string="Status" domain="[]" context="{'group_by':'state'}"/>
                 </group>
-        </search>
-    </field>
+            </search>
+        </field>
     </record>
 
 
