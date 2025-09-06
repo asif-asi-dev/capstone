@@ -47,6 +47,7 @@ class ComplaintController(http.Controller):
             'purchased_shop_id': int(post.get('shop_id')),
             'purchase_date': post.get('purchase_date'),
             'description': post.get('description'),
+            'google_map_link': post.get('google_map_link'),
             'image_1': image_1,
             'image_2': image_2,
             'video_file': video_data,

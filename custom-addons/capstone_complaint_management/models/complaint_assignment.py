@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 class ComplaintAssignment(models.Model):
     _name = 'complaint.assignment'
     _description = 'Complaint Assignment'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Reference', required=True, copy=False, readonly=True, default='New')
     complaint_id = fields.Many2one(
@@ -11,7 +12,7 @@ class ComplaintAssignment(models.Model):
         string='Complaint',
         required=True,
         domain="[('state', '=', 'submitted')]",
-        ondelete='cascade'
+        ondelete='cascade', tracking=True
     )
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -19,9 +20,9 @@ class ComplaintAssignment(models.Model):
         ('done', 'Done'),
     ], string='Status', default='draft', tracking=True)
 
-    technician_id = fields.Many2one('res.users', string='Technician')
-    start_datetime = fields.Datetime(string='Start Time', related='complaint_id.create_date')
-    end_datetime = fields.Datetime(string='End Time')
+    technician_id = fields.Many2one('res.users', string='Technician', tracking=True)
+    start_datetime = fields.Datetime(string='Start Time', related='complaint_id.create_date', tracking=True)
+    end_datetime = fields.Datetime(string='End Time', tracking=True)
     warranty_status = fields.Selection([
         ('paid', 'Paid'),
         ('non_paid', 'Non-Paid'),
