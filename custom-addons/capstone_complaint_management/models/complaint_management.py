@@ -48,6 +48,7 @@ class ComplaintManagement(models.Model):
         store=True,
         readonly=True
     )
+    google_map_link = fields.Char("Google Map Location URL")
 
     @api.depends('assignment_ids.technician_id')
     def _compute_technician_id(self):

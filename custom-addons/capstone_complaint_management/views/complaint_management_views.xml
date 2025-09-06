@@ -83,6 +83,7 @@
                             <field name="picking_ids" invisible="1"/>
                             <field name="repair_order_ids" invisible="1"/>
                             <field name="technician_id"/>
+                            <field name="google_map_link" widget="url" readonly="state != 'draft'"/>
                         </group>
                     </group>
 
