@@ -6,10 +6,6 @@
             <tree string="Sales Return Requests">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="product_id"/>
-                <field name="product_uom_qty" string="Sale Quantity"/>
-                <field name="invoice_id" string="Invoice"/>
-                <field name="sale_order_id" string="Sale Order"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -20,7 +16,7 @@
         <field name="model">sale.return.request</field>
         <field name="arch" type="xml">
             <form string="Sales Return Request">
-                <!-- Set reference as the form title -->
+                <!-- Header -->
                 <header>
                     <button name="action_submit_return_request"
                             string="Submit"
@@ -30,7 +26,9 @@
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,processing,done,cancelled"/>
                 </header>
+
                 <sheet>
+                    <!-- Smart buttons -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_return_request_picking"
                                 type="object"
@@ -53,34 +51,56 @@
                                    options="{'no_open': True}"/>
                         </button>
                     </div>
+
+                    <!-- Title -->
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" class="oe_inline" placeholder="New"/>
                         </h1>
                     </div>
+
+                    <!-- General Info -->
                     <group>
                         <group>
-                            <field name="partner_id" required="1" options="{'no_open': True}" readonly="state != 'draft'"/>
-                            <field name="product_id" required="1" options="{'no_open': True}" readonly="state != 'draft'"/>
-                            <field name="uom_id" required="1" readonly="1" options="{'no_open': True}" force_save="1"/>
-                            <field name="lot_id" readonly="state != 'draft'" options="{'no_open': True}" force_save="1"/>
-                            <field name="source_location_id" readonly="1" options="{'no_open': True}" />
+                            <field name="partner_id" required="1"
+                                   options="{'no_open': True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="source_location_id" readonly="1" options="{'no_open': True}"/>
                             <field name="destination_location_id" readonly="1" options="{'no_open': True}"/>
-                            <field name="picking_type_id" invisible="1"/>
-
-                        </group>
-                        <group>
-                            <field name="invoice_id" domain="invoice_ids_domain" string="Invoice" options="{'no_open': True}" readonly="state != 'draft'"/>
-                            <field name="invoice_ids_domain" invisible="1" readonly="state != 'draft'"/>
-                            <field name="sale_order_id" string="Sale Order" readonly="1" force_save="1" options="{'no_open': True}"/>
-                            <field name="product_uom_qty" string="Sale Quantity" force_save="1" options="{'no_open': True}" readonly="state != 'draft'"/>
-                            <field name="return_qty" readonly="state != 'draft'"/>
-                            <field name="return_order_id" readonly="1" invisible="1"/>
-                            <field name="return_request_picking_id" invisible="1" readonly="state != 'draft'"/>
-                            <field name="reason_id" options="{'no_open': True}" readonly="state != 'draft'"/>
                             <field name="notes" readonly="state != 'draft'"/>
                         </group>
+                        <group>
+
+                            <field name="picking_type_id" invisible="1"/>
+                            <field name="return_order_id" invisible="1"/>
+                            <field name="return_request_picking_id" invisible="1"/>
+                        </group>
                     </group>
+
+                    <!-- Return Lines -->
+                    <notebook>
+                        <page string="Return Lines">
+                            <field name="line_ids" context="{'default_request_id': active_id}" readonly="state != 'draft'">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="invoice_id"
+                                           domain="invoice_ids_domain"
+                                           string="Invoice"
+                                           options="{'no_open': True}"
+                                           force_save="1"
+                                           readonly="parent.state != 'draft'"/>
+                                    <field name="sale_order_id" force_save="1" options="{'no_open': True}" string="Sale Order"/>
+                                    <field name="invoice_ids_domain" column_invisible="1"/>
+                                    <field name="uom_id" readonly="1" options="{'no_open': True}" force_save="1" string="Uom"/>
+                                    <field name="lot_id" options="{'no_open': True}"/>
+                                    <field name="product_uom_qty"  force_save="1" readonly="parent.state != 'draft'" string="Sale Quantity"/>
+                                    <field name="return_qty"/>
+                                    <field name="notes" string="Return Reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
                 </sheet>
             </form>
         </field>

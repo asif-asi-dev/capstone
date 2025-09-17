@@ -42,8 +42,6 @@ class StockWarehouse(models.Model):
                     'company_id': warehouse.company_id.id,
                     'is_virtual_return_location': True,
                 })
-                print(">>>>>>>>>>>>>>.")
-
             # Scrap Location
             if not Location.search([
                 ('is_scrap_location', '=', True),

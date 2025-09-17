@@ -3,4 +3,5 @@ access_sales_return_order_id,access_sales_return_order,model_sales_return_order,
 access_sales_return_order_line_id,access_sales_return_order_line,model_sales_return_order_line,base.group_user,1,1,1,1
 access_sale_return_request_id,access_sale_return_request,model_sale_return_request,base.group_user,1,1,1,1
 access_return_reason_id,access_return_reason,model_return_reason,base.group_user,1,1,1,1
-access_inspection_result_id,access_inspection_result,model_inspection_result,base.group_user,1,1,1,1
+access_inspection_result_id,access_inspection_result,model_inspection_result,base.group_user,1,1,1,1,
+access_sale_return_request_line_id,access_sale_return_request_line,model_sale_return_request_line,base.group_user,1,1,1,1
