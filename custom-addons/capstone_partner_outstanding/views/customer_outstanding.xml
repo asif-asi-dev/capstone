@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Action for Customer Outstanding -->
+    <record id="action_customer_outstanding" model="ir.actions.act_window">
+        <field name="name">Customer Outstanding</field>
+        <field name="res_model">customer.outstanding.report</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="domain">[('move_type','in',['out_invoice','out_refund'])]</field>
+    </record>
+
+    <!-- Action for Vendor Outstanding -->
+    <record id="action_vendor_outstanding" model="ir.actions.act_window">
+        <field name="name">Vendor Outstanding</field>
+        <field name="res_model">customer.outstanding.report</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="domain">[('move_type','in',['in_invoice','in_refund'])]</field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_customer_outstanding_tree" model="ir.ui.view">
+        <field name="name">customer.outstanding.report.tree</field>
+        <field name="model">customer.outstanding.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="invoice_date"/>
+                <field name="invoice_id"/>
+                <field name="partner_id"/>
+                <field name="move_type"/>
+                <field name="due_date"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="residual" sum="Outstanding"/>
+                <field name="age"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_customer_outstanding_root"
+              name="Outstanding"
+              parent="account.menu_finance"
+              sequence="34"/>
+
+    <menuitem id="menu_customer_outstanding"
+              name="Customer Outstanding"
+              parent="menu_customer_outstanding_root"
+              action="action_customer_outstanding"
+              sequence="1"/>
+
+    <menuitem id="menu_vendor_outstanding"
+              name="Vendor Outstanding"
+              parent="menu_customer_outstanding_root"
+              action="action_vendor_outstanding"
+              sequence="2"/>
+</odoo>
