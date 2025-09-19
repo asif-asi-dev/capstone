@@ -25,12 +25,6 @@ class SalesReturnOrder(models.Model):
         string="Source Location",
         help="Location from which the product is taken."
     )
-    product_id = fields.Many2one('product.product', string="Product")
-    quantity = fields.Float(string="Quantity")
-    reason_id = fields.Many2one(
-        'return.reason',
-        string='Return Reason'
-    )
     return_request_id = fields.Many2one(
         'sale.return.request',
         string='Return Request'
@@ -139,7 +133,6 @@ class SalesReturnOrderLine(models.Model):
     _order = 'id'
 
     return_order_id = fields.Many2one('sales.return.order', string="Return Order", required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Return Quantity", required=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one('uom.uom', string="Unit of Measure", required=True)
     lot_id = fields.Many2one('stock.lot', string="Lot/Serial Number")
@@ -147,11 +140,8 @@ class SalesReturnOrderLine(models.Model):
     location_dest_id = fields.Many2one(
         'stock.location',
         string="Destination Location",
-        help="Location to which the product is moved."
-    )
-    inspection_result_id = fields.Many2one(
-        'inspection.result',
-        string='Inspection Result'
+        help="Location to which the product is moved.",
+        default=lambda self: self._default_location_dest_id()
     )
     inspection_result = fields.Selection([
         ('salable', 'Salable'),
@@ -160,12 +150,12 @@ class SalesReturnOrderLine(models.Model):
         ('recyclable', 'Recyclable'),
         ('manufacturing_defect', 'Manufacturing Defect'),
     ], string="Inspection Result",default='salable')
+    product_id = fields.Many2one('product.product', string="Product")
+    return_reason = fields.Char(string="Return Reason")
+    return_qty = fields.Float(string="Return Quantity", required=True, digits='Product Unit of Measure')
 
 
-    @api.onchange('inspection_result_id')
-    def _onchange_inspection_result_id(self):
-        if self.inspection_result_id:
-            self.location_dest_id = self.inspection_result_id.location_dest_id
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
@@ -205,3 +195,12 @@ class SalesReturnOrderLine(models.Model):
                     ('location_id', '=', warehouse.view_location_id.id)
                 ], limit=1)
                 self.location_dest_id = location.id if location else False
+
+    @api.model
+    def _default_location_dest_id(self):
+        warehouse = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
+        if warehouse:
+            lot_stock = warehouse.lot_stock_id.id
+        return lot_stock if lot_stock else False
