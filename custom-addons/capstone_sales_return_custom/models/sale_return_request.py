@@ -298,6 +298,8 @@ class SaleReturnRequestLine(models.Model):
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id_combined(self):
+        self.product_uom_qty = 0.0
+        self.sale_order_id = False
         if self.invoice_id and self.invoice_id.invoice_origin:
             self._cr.execute("""
                 SELECT id FROM sale_order

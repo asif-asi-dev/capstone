@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 class SalesReturnOrder(models.Model):
     _name = 'sales.return.order'
@@ -30,6 +30,12 @@ class SalesReturnOrder(models.Model):
         string='Return Request'
     )
     picking_ids = fields.One2many('stock.picking', 'return_order_id', string='Pickings')
+
+    allowed_product_ids = fields.Many2many("product.product", compute="_compute_allowed_product_ids")
+
+    def _compute_allowed_product_ids(self):
+        for rec in self:
+            rec.allowed_product_ids = rec.line_ids.mapped("product_id")
 
     def action_view_return_pickings(self):
         self.ensure_one()
@@ -92,7 +98,7 @@ class SalesReturnOrder(models.Model):
             move_vals = {
                 'name': line.product_id.name,
                 'product_id': line.product_id.id,
-                'product_uom_qty': line.quantity,
+                'product_uom_qty': line.return_qty,
                 'product_uom': line.uom_id.id,
                 'location_id': self.location_id.id,
                 'location_dest_id':line.location_dest_id.id,
@@ -105,7 +111,7 @@ class SalesReturnOrder(models.Model):
                     'product_uom_id': line.uom_id.id,
                     'location_id': self.location_id.id,
                     'location_dest_id': line.location_dest_id.id,
-                    'quantity': line.quantity,
+                    'quantity': line.return_qty,
                     'lot_id': line.lot_id.id,
                 })]
 
@@ -153,6 +159,7 @@ class SalesReturnOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product")
     return_reason = fields.Char(string="Return Reason")
     return_qty = fields.Float(string="Return Quantity", required=True, digits='Product Unit of Measure')
+
 
 
 
@@ -204,3 +211,51 @@ class SalesReturnOrderLine(models.Model):
         if warehouse:
             lot_stock = warehouse.lot_stock_id.id
         return lot_stock if lot_stock else False
+
+    @api.onchange("product_id")
+    def _onchange_product_id(self):
+        """ If product already exists in another line, copy its quantity """
+        for line in self:
+            if not line.product_id or not line.return_order_id:
+                continue
+
+            # find first existing line with same product (excluding current line)
+            existing_line = line.return_order_id.line_ids.filtered(
+                lambda l: l.product_id == line.product_id and l.id != line.id
+            )[:1]
+
+            if existing_line:
+                line.quantity = existing_line.quantity if existing_line.quantity else 0
+                line.uom_id = existing_line.uom_id if existing_line.uom_id else False
+                line.return_reason = existing_line.return_reason if existing_line.return_reason else False
+    @api.onchange("return_qty")
+    def _onchange_return_qty(self):
+        """Ensure total return_qty for a product does not exceed original quantity"""
+        for line in self:
+            print("LLLLLLLLLLLLl")
+            if not line.product_id or not line.return_order_id:
+                continue
+
+            # get first occurrence of product (original allowed qty reference)
+            reference_line = line.return_order_id.line_ids.filtered(
+                lambda l: l.product_id == line.product_id
+            )[:1]
+
+            if not reference_line or not reference_line.quantity:
+                continue
+
+            allowed_qty = reference_line.quantity
+            print(">>>>>>>>>>>",allowed_qty)
+
+            # total return qty for this product (including current line)
+            total_return = sum(
+                l.return_qty for l in line.return_order_id.line_ids if l.product_id == line.product_id
+            )
+            print(">>>>>>>>>>>",total_return)
+
+            if total_return > allowed_qty:
+                print(":::::::::::")
+                # rollback entered qty
+                line.return_qty = max(0, allowed_qty - total_return)
+                raise ValidationError(_(f"Total return quantity for {line.product_id.display_name} "
+                                        f"cannot exceed {allowed_qty}.",))
