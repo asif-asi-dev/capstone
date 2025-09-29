@@ -35,7 +35,7 @@ class SaleReturnRequest(models.Model):
     notes = fields.Text(string='Notes')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
+        ('submitted', 'Submitted For Approval'),
         ('processing', 'Under Inspection'),
         ('done', 'Done'),
         ('cancelled', 'Cancelled')
@@ -74,6 +74,18 @@ class SaleReturnRequest(models.Model):
         'request_id',
         string="Return Lines"
     )
+    date_requested = fields.Date(string='Date Requested')
+    date_approved = fields.Date(string='Date Approved')
+
+    def action_submit_for_approval(self):
+        for rec in self:
+            if rec.state == 'draft':
+                rec.state = 'submitted'
+                rec.date_requested = fields.Date.today()
+    def action_cancel(self):
+        for rec in self:
+            if rec.state == 'submitted':
+                rec.state = 'cancelled'
 
     @api.depends('picking_type_id')
     def _compute_destination_location(self):
@@ -100,7 +112,7 @@ class SaleReturnRequest(models.Model):
         StockPicking = self.env['stock.picking']
 
         for rec in self:
-            if rec.state != 'draft':
+            if rec.state != 'submitted':
                 continue
 
             move_vals = []
@@ -145,7 +157,6 @@ class SaleReturnRequest(models.Model):
                 'origin': rec.name,
                 'move_ids_without_package': move_vals,
             })
-
             # Link picking to request
             rec.return_request_picking_id = return_picking_request.id
 
@@ -157,8 +168,6 @@ class SaleReturnRequest(models.Model):
                     skip_immediate=True,
                     skip_expired=True
                 ).button_validate()
-
-                rec.state = 'submitted'
                 _logger.info(f"Successfully validated picking {return_picking_request.name}")
 
             except Exception as e:
@@ -166,7 +175,8 @@ class SaleReturnRequest(models.Model):
                 rec.state = 'draft'
                 continue
             rec._create_and_link_sales_return_order()
-            rec.state = 'submitted'
+            rec.state = 'done'
+            rec.date_approved = fields.Date.today()
 
 
 
@@ -181,7 +191,9 @@ class SaleReturnRequest(models.Model):
                 'quantity': line.return_qty,
                 'lot_id': line.lot_id.id if line.product_id.tracking != 'none' and line.lot_id else False,
                 'uom_id': line.uom_id.id if line.uom_id else False,
-                'return_reason': line.notes if line.notes else False,
+                'return_reason_id': line.return_reason_id.id if line.return_reason_id else False,
+                'sale_order_id':line.sale_order_id.id if line.sale_order_id else False,
+                'invoice_id':line.invoice_id.id if line.invoice_id else False,
             }))
         sales_return_order = SalesReturnOrder.create({
             'line_ids': order_lines,
@@ -278,6 +290,7 @@ class SaleReturnRequestLine(models.Model):
     invoice_ids_domain = fields.Char(compute='_compute_invoice_domain')
 
     notes = fields.Char(string='Notes')
+    return_reason_id = fields.Many2one('return.reason',string='Return Reason')
 
     @api.depends('request_id.partner_id', 'product_id', 'lot_id')
     def _compute_invoice_domain(self):

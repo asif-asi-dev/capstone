@@ -18,13 +18,23 @@
             <form string="Sales Return Request">
                 <!-- Header -->
                 <header>
-                    <button name="action_submit_return_request"
+                    <button name="action_submit_for_approval"
                             string="Submit"
                             type="object"
                             invisible="state != 'draft'"
                             class="oe_highlight"/>
+                    <button name="action_submit_return_request"
+                            string="Approve"
+                            type="object"
+                            invisible="state != 'submitted'"
+                            class="oe_highlight"/>
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            invisible="state != 'submitted'"
+                            class="oe_highlight"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,submitted,processing,done,cancelled"/>
+                           statusbar_visible="draft,submitted,done"/>
                 </header>
 
                 <sheet>
@@ -64,13 +74,14 @@
                         <group>
                             <field name="partner_id" required="1"
                                    options="{'no_open': True}"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state not in ['draft','submitted']"/>
                             <field name="source_location_id" readonly="1" options="{'no_open': True}"/>
                             <field name="destination_location_id" readonly="1" options="{'no_open': True}"/>
-                            <field name="notes" readonly="state != 'draft'"/>
+                            <field name="notes" readonly="state not in ['draft','submitted']"/>
                         </group>
                         <group>
-
+                            <field name="date_requested" readonly="1" invisible="date_requested == False"/>
+                            <field name="date_approved" readonly="1" invisible="date_approved == False"/>
                             <field name="picking_type_id" invisible="1"/>
                             <field name="return_order_id" invisible="1"/>
                             <field name="return_request_picking_id" invisible="1"/>
@@ -80,7 +91,7 @@
                     <!-- Return Lines -->
                     <notebook>
                         <page string="Return Lines">
-                            <field name="line_ids" context="{'default_request_id': active_id}" readonly="state != 'draft'">
+                            <field name="line_ids" context="{'default_request_id': active_id}" readonly="state not in ['draft','submitted']">
                                 <tree editable="bottom">
                                     <field name="product_id"/>
                                     <field name="invoice_id"
@@ -88,14 +99,15 @@
                                            string="Invoice"
                                            options="{'no_open': True}"
                                            force_save="1"
-                                           readonly="parent.state != 'draft'"/>
+                                           readonly="parent.state not in ['draft','submitted']"/>
                                     <field name="sale_order_id" force_save="1" options="{'no_open': True}" string="Sale Order"/>
                                     <field name="invoice_ids_domain" column_invisible="1"/>
                                     <field name="uom_id" readonly="1" options="{'no_open': True}" force_save="1" string="Uom"/>
                                     <field name="lot_id" options="{'no_open': True}"/>
-                                    <field name="product_uom_qty"  force_save="1" readonly="parent.state != 'draft'" string="Sale Quantity"/>
-                                    <field name="return_qty"/>
-                                    <field name="notes" string="Return Reason"/>
+                                    <field name="product_uom_qty"  force_save="1" readonly="parent.state not in ['draft','submitted']" string="Sale Quantity"/>
+                                    <field name="return_qty" readonly="parent.state not in ['draft','submitted']"/>
+                                    <field name="return_reason_id" readonly="parent.state not in ['draft','submitted']" options="{'no_open': True,'no_create': True,'no_create_edit': True}"/>
+                                    <field name="notes" string="Remarks"/>
                                 </tree>
                             </field>
                         </page>
