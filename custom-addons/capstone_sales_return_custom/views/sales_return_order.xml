@@ -58,6 +58,7 @@
                         <field name="partner_id" readonly="1" options="{'no_open': True}"/>
                         <field name="location_id" readonly="1" options="{'no_open': True}"/>
                         <field name="return_request_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="allowed_product_ids" invisible="1"/>
                     </group>
                     <group>
 
@@ -68,11 +69,15 @@
                         <page string="Return Lines">
                             <field name="line_ids">
                                 <tree editable="bottom" >
-                                    <field name="product_id" required="1" readonly="parent.state not in ['draft', 'processing']"/>
-                                    <field name="quantity" required="1" readonly="1"/>
+                                    <field name="product_id" required="1"
+                                           domain="[('id', 'in', parent.allowed_product_ids)]"
+                                           readonly="parent.state not in ['draft', 'processing']"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="sale_order_id" readonly="1"/>
+                                    <field name="quantity" required="1" readonly="1" string="Return Request Quantity" force_save="1"/>
                                     <field name="return_qty" string="Quantity" readonly="parent.state not in ['draft', 'processing']"/>
                                     <field name="uom_id" required="1" readonly="1" options="{'no_open': True}" force_save="1"/>
-                                    <field name="return_reason" readonly="1"/>
+                                    <field name="return_reason_id" readonly="1" force_save="1"/>
                                     <field name="inspection_result" readonly="parent.state not in ['draft', 'processing']"/>
                                     <field name="lot_id" readonly="parent.state not in ['draft', 'processing']"
                                            invisible="product_id.tracking == 'none'"
