@@ -21,6 +21,7 @@ Long description of module's purpose
         'base',
         'sale',
         'stock',
+        'sale_stock',
         'product',
         'uom',
     ],
@@ -35,6 +36,8 @@ Long description of module's purpose
         'views/sale_return_request.xml',
         'views/return_reason.xml',
         'views/scrap_sale.xml',
+        'views/discount_sale_order.xml',
+        'views/stock_warehouse.xml',
         'views/menu.xml',
     ],
 

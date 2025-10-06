@@ -29,4 +29,9 @@
               parent="sale.sale_order_menu"
               sequence="100"
               action="action_custom_invoice_scrap_sale"/>
+    <menuitem id="menu_discount_sale"
+              name="Discount Sale"
+              parent="sale.sale_order_menu"
+              sequence="110"
+              action="capstone_sales_return_custom.action_discount_sale_orders_id"/>
 </odoo>
