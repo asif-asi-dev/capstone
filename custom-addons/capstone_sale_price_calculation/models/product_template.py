@@ -9,9 +9,10 @@ class ProductTemplate(models.Model):
     )
     net_rate_based_on = fields.Selection(
         [
-            ('net_rate', 'Net Rate'),
+            ('net_rate', 'Net Rate (Sales Price)'),
             ('margin', 'Margin'),
         ],
         string="Net Rate Based On",
         default='net_rate',
+        required=True
     )

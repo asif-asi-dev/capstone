@@ -6,32 +6,14 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_standard_price']" position="after">
-                <group name="group_customer_margins">
-                    <label for="net_rate_based_on"/>
-                    <div class="o_row">
-                        <field name="net_rate_based_on"/>
-                    </div>
-                </group>
+            <xpath expr="//label[@for='list_price']" position="before">
+                <field name="net_rate_based_on" required="1"/>
+                <field
+                        name="mrp"
+                        widget="monetary"
+                        options="{'currency_field': 'currency_id', 'field_digits': True}"
+                />
             </xpath>
-<!--            <xpath expr="//group[@name='standard_price']" position="after">-->
-<!--                <group name="group_product_mrp" col="2">-->
-<!--                    <group>-->
-<!--                        <label for="mrp"/>-->
-<!--                        <div class="o_row">-->
-<!--                            <field name="mrp" class="oe_inline"/>-->
-<!--                        </div>-->
-<!--                    </group>-->
-<!--                </group>-->
-<!--            </xpath>-->
-
-            <!-- Insert MRP field before list_price -->
-            <xpath expr="//field[@name='categ_id']" position="before">
-                <field name="mrp"/>
-            </xpath>
-            <field name="detailed_type" position="after">
-                <field name="mrp"/>
-            </field>
 
         </field>
     </record>
