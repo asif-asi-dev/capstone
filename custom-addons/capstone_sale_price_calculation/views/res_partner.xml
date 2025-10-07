@@ -7,11 +7,15 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <!-- Add new fields below the 'phone' field (you can change the position as needed) -->
             <xpath expr="//field[@name='category_id']" position="after">
+                <field name="customer_rank" invisible="1"/>
+                <group string="Customer Pricing Rule"
+                       invisible="customer_rank == 0">
                     <field name="margin_percent"/>
                     <field name="discount_percent"/>
+                </group>
             </xpath>
+
 
         </field>
     </record>
