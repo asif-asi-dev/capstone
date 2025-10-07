@@ -19,7 +19,8 @@ class SaleOrderLine(models.Model):
 
         if not customer or not product:
             return price
-
+        if margin == 0.0 and discount == 0.0:
+            return price
         if product.net_rate_based_on == "net_rate":
             return price
 
