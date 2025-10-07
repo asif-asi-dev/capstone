@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the base partner form view -->
+    <record id="view_partner_form_inherit_margin_discount" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.margin.discount</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add new fields below the 'phone' field (you can change the position as needed) -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="margin_percent"/>
+                    <field name="discount_percent"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
