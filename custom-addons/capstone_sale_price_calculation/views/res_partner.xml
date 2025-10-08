@@ -7,16 +7,18 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='category_id']" position="after">
-                <field name="customer_rank" invisible="1"/>
-                <group string="Customer Pricing Rule"
-                       invisible="customer_rank == 0">
-                    <field name="margin_percent"/>
-                    <field name="discount_percent"/>
-                </group>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+
+                <page name="customer_pricing_rule_page_id" string="Customer Pricing Rule" invisible="customer_rank == 0">
+                    <group>
+                        <group class="oe_inline">
+                            <field name="customer_rank" invisible="1"/>
+                            <field name="margin_percent"/>
+                            <field name="discount_percent"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
-
-
         </field>
     </record>
 </odoo>
