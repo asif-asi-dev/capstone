@@ -13,3 +13,4 @@ from . import fsm_shop_visit_master
 from . import fsm_territory
 from . import shop_delivery_route
 from . import stock_picking
+from . import account_payment

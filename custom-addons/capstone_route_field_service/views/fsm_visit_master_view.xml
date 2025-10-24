@@ -4,28 +4,28 @@
         <field name="name">fsm.shop.visit.master.form</field>
         <field name="model">fsm.shop.visit.master</field>
         <field name="arch" type="xml">
-            <form string="Shop Visit Master">
+            <form string="Shop Visit Master" create="False">
                 <sheet>
                     <group>
 
                         <group>
                             <field name="name" readonly="1"/>
-                            <field name="salesperson_id"/>
-                            <field name="date"/>
-                            <field name="weekday_id"/>
+                            <field name="salesperson_id" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="weekday_id" readonly="1"/>
 
                         </group>
                         <group>
                             <field name="route_assignement_id"
-                                   domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed')]"/>
-                            <field name="total_klm_traveled"/>
+                                   domain="[('sales_partner_id', '=', salesperson_id), ('state','=','confirmed')]" readonly="1"/>
+                            <field name="total_klm_traveled" readonly="1"/>
 
                         </group>
                     </group>
                     <notebook>
                         <page string="Shop Visits">
                             <field name="shop_visit_ids">
-                                <tree editable="bottom">
+                                <tree readonly="1" create="False" delete="False">
                                     <field name="weekday_id"/>
                                     <field name="route_assignement_id"/>
                                     <field name="salesperson_id"/>
@@ -64,7 +64,7 @@
         <field name="name">Shop Visit Masters</field>
         <field name="res_model">fsm.shop.visit.master</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{}</field>
+        <field name="context">{'create':False}</field>
     </record>
 
     <!-- Menu Item -->

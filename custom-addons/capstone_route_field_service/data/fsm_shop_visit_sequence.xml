@@ -7,4 +7,13 @@
         <field name="number_next">1</field>
         <field name="number_increment">1</field>
     </record>
+
+     <record id="seq_fsm_shop_visit_master" model="ir.sequence">
+        <field name="name">FSM Shop Visit Master</field>
+        <field name="code">fsm.shop.visit.master</field>
+        <field name="prefix">FSVM</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
 </odoo>
