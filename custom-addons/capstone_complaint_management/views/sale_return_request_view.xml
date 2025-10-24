@@ -1,0 +1,28 @@
+<odoo>
+    <!-- ================= TREE VIEW INHERIT ================= -->
+    <record id="view_sale_return_request_tree_inherit_assignment" model="ir.ui.view">
+        <field name="name">sale.return.request.tree.inherit.assignment</field>
+        <field name="model">sale.return.request</field>
+        <field name="inherit_id" ref="capstone_sales_return_custom.view_sale_return_request_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='state']" position="before">
+                <field name="assignment_id" widget="badge" string="Assignment" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- ================= FORM VIEW INHERIT ================= -->
+    <record id="view_sale_return_request_form_inherit_assignment" model="ir.ui.view">
+        <field name="name">sale.return.request.form.inherit.assignment</field>
+        <field name="model">sale.return.request</field>
+        <field name="inherit_id" ref="capstone_sales_return_custom.view_sale_return_request_form"/>
+        <field name="arch" type="xml">
+            <!-- Insert under General Info -->
+            <xpath expr="//group/group/field[@name='notes']" position="after">
+                <field name="assignment_id" options="{'no_open': True}" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

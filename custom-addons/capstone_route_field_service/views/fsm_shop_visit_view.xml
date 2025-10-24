@@ -7,6 +7,18 @@
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,on_shop,done"
                            statusbar_colors="{'on_shop': 'blue', 'done': 'green', 'cancel': 'red'}"/>
+                    <button name="action_finish_visit"
+                            type="object"
+                            string="Finish Visit"
+                            class="btn-success"
+                            invisible="state != 'on_shop'"/>
+
+                    <!-- Cancel Visit -->
+                    <button name="action_cancel_visit"
+                            type="object"
+                            string="Cancel Visit"
+                            class="btn-secondary"
+                            invisible="state not in ['draft', 'on_shop']"/>
                     <button name="action_visit_shop"
                             type="object"
                             string="Visit Shop"
@@ -16,7 +28,7 @@
                             type="object"
                             string="Create Lead"
                             class="oe_stat_button btn-primary"
-                            icon="fa-lightbulb" invisible="state != 'on_shop'"/>
+                            icon="fa-inbox" invisible="state != 'on_shop'"/>
                     <button name="action_create_sale_order"
                             type="object"
                             string="Create Sale Order"
@@ -32,13 +44,40 @@
                             invisible="state != 'on_shop'"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                        <!-- Leads Button -->
+                        <button type="object"
+                                name="action_view_leads"
+                                class="oe_stat_button"
+                                icon="fa-inbox"
+                                invisible="lead_count == 0">
+                            <field name="lead_count" widget="statinfo" string="Leads"/>
+                        </button>
+
+                        <!-- Sales Orders Button -->
+                        <button type="object"
+                                name="action_view_sales_orders"
+                                class="oe_stat_button"
+                                icon="fa-shopping-cart"
+                                invisible="sale_count == 0">
+                            <field name="sale_count" widget="statinfo" string="Sales Orders"/>
+                        </button>
+
+                        <!-- Payments Button -->
+                        <button type="object"
+                                name="action_view_payments"
+                                class="oe_stat_button"
+                                icon="fa-credit-card"
+                                invisible="payment_count == 0">
+                            <field name="payment_count" widget="statinfo" string="Payments"/>
+                        </button>
+
+                    </div>
                     <div class="oe_title">
                         <h2>
                             <field name="name" readonly="1" nolabel="1"/>
                         </h2>
-                    </div>
-                    <div class="oe_button_box" name="button_box">
-
                     </div>
                     <group>
                         <group>
@@ -52,23 +91,25 @@
                             <field name="shop_domain_ids" invisible="1"/>
                         </group>
                         <group>
-                            <field name="prvs_shop_id" string="Previous Shop" readonly=""/>
+                            <field name="prvs_shop_id" string="Previous Shop" readonly="state != 'draft'"/>
                             <field name="shop_id" string="Current Shop" readonly="1"/>
                             <field name="kilometers_traveled" string="km"
                                    widget="float"
                                    class="oe_inline"
-                                   style="width: 100px;"/>
+                                   style="width: 100px;" readonly="state != 'draft'"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Expenses">
-                            <field name="expense_ids">
+                            <field name="expense_ids" readonly="state in ('done','cancel')">
                                 <tree editable="bottom">
                                     <field name="name"/>
                                     <field name="date" string="Date"/>
                                     <field name="product_id"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="total_amount_currency" string="Total"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="total_amount_currency" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}" sum="Total"/>
+                                    <field name="currency_id" options="{'no_create': True}" column_invisible="1"/>
                                 </tree>
                             </field>
                         </page>

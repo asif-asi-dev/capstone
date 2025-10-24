@@ -7,3 +7,5 @@ from . import complaint_line
 from . import stock_picking
 from . import repair_order
 from . import review_line
+from . import sale_return_request
+from . import sales_order_return

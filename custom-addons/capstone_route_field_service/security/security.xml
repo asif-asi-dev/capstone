@@ -1,0 +1,37 @@
+<odoo>
+    <!-- =========================
+         SECURITY GROUPS
+    ========================== -->
+    <record id="module_category_sales_delivery_route" model="ir.module.category">
+        <field name="name">Sales/Delivery Route</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <!-- Base Group: Salesperson -->
+    <record id="group_fsm_salesperson" model="res.groups">
+        <field name="name">Salesperson</field>
+        <field name="category_id" ref="capstone_route_field_service.module_category_sales_delivery_route"/>
+    </record>
+
+    <!-- Manager Group: Inherits Salesperson -->
+    <record id="group_fsm_route_manager" model="res.groups">
+        <field name="name">Sales/Delivery Route Manager</field>
+        <field name="implied_ids" eval="[(4, ref('capstone_route_field_service.group_fsm_salesperson'))]"/>
+        <field name="category_id" ref="capstone_route_field_service.module_category_sales_delivery_route"/>
+    </record>
+
+     <record id="fsm_shop_visit_rule_salesperson" model="ir.rule">
+        <field name="name">Shop Visit - Salesperson Access</field>
+        <field name="model_id" ref="model_fsm_shop_visit"/>
+        <field name="groups" eval="[(4, ref('capstone_route_field_service.group_fsm_salesperson'))]"/>
+        <field name="domain_force">[('salesperson_id', '=', user.id)]</field>
+    </record>
+
+     <record id="fsm_shop_visit_master_rule_salesperson" model="ir.rule">
+        <field name="name">Shop Visit Master - Salesperson Access</field>
+        <field name="model_id" ref="model_fsm_shop_visit_master"/>
+        <field name="groups" eval="[(4, ref('capstone_route_field_service.group_fsm_salesperson'))]"/>
+        <field name="domain_force">[('salesperson_id', '=', user.id)]</field>
+    </record>
+
+</odoo>

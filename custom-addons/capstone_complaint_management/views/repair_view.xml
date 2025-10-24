@@ -1,0 +1,52 @@
+<odoo>
+   <record id="view_repair_order_form_inherit" model="ir.ui.view">
+    <field name="name">repair.order.form.inherit.assignment</field>
+    <field name="model">repair.order</field>
+    <field name="inherit_id" ref="repair.view_repair_order_form"/>
+    <field name="arch" type="xml">
+
+        <!-- Add assignment_id under tag_ids -->
+        <field name="tag_ids" position="after">
+            <field name="assignment_id" readonly="1"/>
+        </field>
+
+        <!-- partner_id readonly if assignment_id exists -->
+        <xpath expr="//field[@name='partner_id']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+
+        <!-- product_id readonly if assignment_id exists -->
+        <xpath expr="//field[@name='product_id']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+
+        <!-- product_qty readonly if assignment_id exists -->
+        <xpath expr="//field[@name='product_qty']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='user_id']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='picking_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='tag_ids']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='product_uom']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+        <xpath expr="//field[@name='schedule_date']" position="attributes">
+            <attribute name="readonly">assignment_id</attribute>
+        </xpath>
+
+
+    </field>
+</record>
+
+
+</odoo>

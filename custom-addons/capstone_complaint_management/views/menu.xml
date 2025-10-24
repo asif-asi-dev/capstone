@@ -11,6 +11,7 @@
         name="Complaints"
         parent="menu_complaint_root"
         action="action_complaint_management"
+        groups="capstone_complaint_management.group_complaint_admin"
     />
      <menuitem
         id="menu_assignment"

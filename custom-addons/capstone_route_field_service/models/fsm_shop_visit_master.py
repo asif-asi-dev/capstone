@@ -7,13 +7,14 @@ class FSMShopVisitMaster(models.Model):
     _description = 'Shop Visit Master'
 
     name = fields.Char(string="Visit Reference", readonly=True, copy=False, default='New')
-    salesperson_id = fields.Many2one('res.users', string='Salesperson', required=True)
-    date = fields.Date(string='Visit Date', required=True)
-    weekday_id = fields.Many2one('fsm.weekday', string='Week Day', required=True)
+    salesperson_id = fields.Many2one('res.users', string='Salesperson', required=True, index=True)
+    date = fields.Date(string='Visit Date', required=True, index=True)
+    weekday_id = fields.Many2one('fsm.weekday', string='Week Day', required=True, index=True)
     route_assignement_id = fields.Many2one(
         'fsm.route.assignment',
         string='Route Assignment',
-        domain="[('state', '=', 'confirmed')]"
+        domain="[('state', '=', 'confirmed')]",
+        index=True
     )
     shop_visit_ids = fields.One2many('fsm.shop.visit', 'visit_master_id', string='Shop Visits')
     total_klm_traveled = fields.Float(
@@ -36,13 +37,14 @@ class FSMShopVisitMaster(models.Model):
 
     @api.onchange('salesperson_id', 'weekday_id')
     def _onchange_salesperson_weekday(self):
-        """Filter route assignments based on salesperson and weekday."""
         if self.salesperson_id and self.weekday_id:
             return {
                 'domain': {
                     'route_assignement_id': [
                         ('sales_partner_id', '=', self.salesperson_id.id),
                         ('state', '=', 'confirmed'),
+                        # optional: filter by weekday
+                        # ('week_day_ids', 'in', [self.weekday_id.id]),
                     ]
                 }
             }

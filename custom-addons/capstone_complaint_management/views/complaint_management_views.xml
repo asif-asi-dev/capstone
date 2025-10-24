@@ -8,13 +8,18 @@
                 <field name="customer_id"/>
                 <field name="purchased_shop_id"/>
                 <field name="date"/>
-                <field name="state"/>
                 <field name="assignment_ids" widget="many2many_tags" options="{'no_create': True}"
                        string="Assignments"/>
                 <field name="repair_order_ids" widget="many2many_tags" options="{'no_create': True}"
                        string="Services"/>
                 <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"
                        string="Return/Replacements"/>
+                <field name="state" widget="badge"
+                   decoration-info="state in ('draft','submitted')"
+                   decoration-warning="state == 'assigned'"
+                   decoration-primary="state == 'in_progress'"
+                   decoration-success="state == 'resolved'"
+                   decoration-danger="state == 'closed'"/>
             </tree>
         </field>
     </record>

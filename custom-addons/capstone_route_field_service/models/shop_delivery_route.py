@@ -1,9 +1,5 @@
-from odoo import models, fields,api
+from odoo import models, fields,api,_
 from odoo.exceptions import ValidationError
-
-
-
-
 
 class ShopDeliveryRoute(models.Model):
     _name = 'shop.delivery.route'
@@ -22,40 +18,35 @@ class ShopDeliveryRouteLine(models.Model):
     _name = 'shop.delivery.route.line'
     _description = 'Shop Delivery Route Line'
     _order = 'sequence'
+    _sql_constraints = [
+        ('uniq_shop_per_route', 'unique(route_id, shop_id)', 'This shop is already in this delivery route.')
+    ]
 
-    route_id = fields.Many2one('shop.delivery.route', required=True, ondelete='cascade')
-    shop_id = fields.Many2one('res.partner', domain="[('is_company','=',True)]", required=True)
-    sequence = fields.Integer(default=1)
+    route_id = fields.Many2one('shop.delivery.route', required=True, ondelete='cascade', index=True)
+    shop_id = fields.Many2one('res.partner', domain="[('is_company','=',True)]", required=True, index=True)
+    sequence = fields.Integer(default=1, index=True)
 
     @api.constrains('shop_id')
     def _check_unique_shop_in_routes(self):
+        # Keep your cross-route constraint (a shop cannot belong to another route)
         for rec in self:
-            if rec.shop_id:
-                existing = self.search([
-                    ('shop_id', '=', rec.shop_id.id),
-                    ('route_id', '!=', rec.route_id.id)
-                ], limit=1)
-                if existing:
-                    raise ValidationError(
-                        f"The shop '{rec.shop_id.display_name}' "
-                        "is already assigned to another delivery route."
-                    )
+            existing = self.search([
+                ('id', '!=', rec.id),
+                ('shop_id', '=', rec.shop_id.id),
+                ('route_id', '!=', rec.route_id.id)
+            ], limit=1)
+            if existing:
+                raise ValidationError(
+                    _("The shop '%s' is already assigned to another delivery route.") % rec.shop_id.display_name
+                )
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Auto set sequence as last if not provided
             if not vals.get('sequence') and vals.get('route_id'):
-                last_seq = self.search(
-                    [('route_id', '=', vals['route_id'])],
-                    order="sequence desc",
-                    limit=1
-                ).sequence or 0
+                last_seq = self.search([('route_id', '=', vals['route_id'])], order="sequence desc", limit=1).sequence or 0
                 vals['sequence'] = last_seq + 1
-
         records = super().create(vals_list)
-
-        # Sync delivery route to partner
         for rec in records:
             if rec.shop_id and rec.route_id:
                 rec.shop_id.delivery_route_id = rec.route_id
