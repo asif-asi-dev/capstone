@@ -343,8 +343,9 @@ class SaleReturnRequestLine(models.Model):
     def _onchange_sale_order_id(self):
         if self.sale_order_id:
             self.return_available_qty = self.sale_order_id.get_available_sale_qty(self.product_id.id,self.product_id.product_tmpl_id.id)
-            if self.return_available_qty < 1:
-                raise ValidationError(_("Return quantity exceeds available sale quantity."))
+        if self.sale_order_id and self.return_available_qty < 1:
+            raise ValidationError(_("No quantity available for return in the corresponding sale order."))
+
 
 
 
