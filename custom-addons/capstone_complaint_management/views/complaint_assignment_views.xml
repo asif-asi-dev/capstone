@@ -1,4 +1,6 @@
 <odoo>
+
+    <!-- ================= TREE VIEW ================= -->
     <record id="view_complaint_assignment_tree" model="ir.ui.view">
         <field name="name">complaint.assignment.tree</field>
         <field name="model">complaint.assignment</field>
@@ -11,45 +13,62 @@
                 <field name="end_datetime"/>
                 <field name="hours_taken"/>
                 <field name="warranty_status"/>
-                <field name="repair_order_ids" widget="many2many_tags" options="{'no_create': True}"
-                       string="Services"/>
-                <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"
-                       string="Return/Replacements"/>
+
+                <field name="repair_order_ids" widget="many2many_tags"
+                       options="{'no_create': True}" string="Services"/>
+
+                <field name="picking_ids" widget="many2many_tags"
+                       options="{'no_create': True}" string="Return/Replacements"/>
+
+                <!-- New: Show Sale Return Requests -->
+                <field name="sale_return_request_ids" widget="many2many_tags"
+                       options="{'no_create': True}" string="Sale Returns"/>
+                 <field name="state" widget="badge"
+                   decoration-info="state == 'draft'"
+                   decoration-warning="state == 'assigned'"
+                   decoration-success="state == 'done'"/>
             </tree>
         </field>
     </record>
 
+
+    <!-- ================= FORM VIEW ================= -->
     <record id="view_complaint_assignment_form" model="ir.ui.view">
         <field name="name">complaint.assignment.form</field>
         <field name="model">complaint.assignment</field>
         <field name="arch" type="xml">
             <form string="Complaint Assignment">
+
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
 
                     <button name="action_assign" string="Assign" type="object"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
-                    <!--                    <button name="action_done" string="Mark as Done" type="object"-->
-                    <!--                            class="btn-success"-->
-                    <!--                            invisible="state != 'assigned'"/>-->
+
                     <button name="action_create_logistics" string="Create Return" type="object"
                             class="btn-secondary"
-                            invisible="not (state == 'assigned' and resolution_type == 'return') or picking_ids"/>
+                            invisible="not (state == 'assigned' and resolution_type == 'return') or sale_return_request_ids"/>
+
                     <button name="action_create_logistics" string="Create Replacement" type="object"
                             class="btn-secondary"
                             invisible="not (state == 'assigned' and resolution_type == 'replacement') or picking_ids"/>
+
                     <button name="action_create_service" string="Create Service" type="object"
                             class="btn-secondary"
                             invisible="not (state == 'assigned' and resolution_type == 'service') or repair_order_ids"/>
                 </header>
+
                 <sheet>
                     <div class="oe_title">
                         <h2>
                             <field name="name" readonly="1" nolabel="1"/>
                         </h2>
                     </div>
+
                     <div class="oe_button_box" name="button_box">
+
+                        <!-- Pickings -->
                         <button name="action_view_picking"
                                 type="object"
                                 class="oe_stat_button"
@@ -57,82 +76,114 @@
                                 invisible="not picking_ids">
                             <field name="picking_count" widget="statinfo" string="Returns"/>
                         </button>
+
+                        <!-- Repair Orders -->
                         <button name="action_view_repairs"
                                 type="object"
-                                class="oe_stat_button" invisible="not repair_order_ids"
-                                icon="fa-wrench">
+                                class="oe_stat_button"
+                                icon="fa-wrench"
+                                invisible="not repair_order_ids">
                             <field name="repair_count" widget="statinfo" string="Services"/>
                         </button>
+
+                        <!-- NEW: Sale Return Requests -->
+                        <button name="action_view_sale_return_requests"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-undo"
+                                invisible="not sale_return_request_ids">
+                            <field name="sale_return_request_count" widget="statinfo" string="Sale Returns"/>
+                        </button>
+
                     </div>
 
                     <group>
                         <group>
                             <field name="complaint_id" required="1" readonly="state != 'draft'"/>
-                            <field name="start_datetime" required="1" readonly="1"/>
+                            <field name="start_datetime" readonly="1"/>
                             <field name="resolution_type" required="1" readonly="state != 'draft'"/>
-                            <field name="picking_ids" invisible="1" readonly="state != 'draft'"/>
-                            <field name="repair_order_ids" invisible="1" readonly="state != 'draft'"/>
+                            <field name="picking_ids" invisible="1"/>
+                            <field name="repair_order_ids" invisible="1"/>
+                            <field name="sale_return_request_ids" invisible="1"/>
                         </group>
                         <group>
                             <field name="technician_id" required="1" readonly="state != 'draft'"/>
                             <field name="end_datetime" readonly="1"/>
-                            <field name="hours_taken"/>
+                            <field name="hours_taken" readonly="1"/>
                             <field name="return_location_id"
-                                   invisible="resolution_type not in  ('return','replacement')"
-                                   required="resolution_type not in ('service')"/>
-                            <field name="warranty_status" invisible="resolution_type not in  ('service')"
+                                   invisible="resolution_type not in ('replacement')"
+                                   required="resolution_type == 'replacement'"/>
+                            <field name="warranty_status"
+                                   invisible="resolution_type not in ('service')"
                                    readonly="state != 'draft'"/>
                         </group>
                     </group>
+
                 </sheet>
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
+
             </form>
         </field>
     </record>
 
+
+    <!-- ================= SEARCH VIEW ================= -->
     <record id="view_complaint_assignment_search" model="ir.ui.view">
         <field name="name">complaint.assignment.search</field>
         <field name="model">complaint.assignment</field>
         <field name="arch" type="xml">
             <search string="Complaint Assignments">
+
                 <field name="name" string="Reference / Technician"
                        filter_domain="['|',('name','ilike',self),('technician_id','ilike',self)]"/>
-                <field name="name" string="Complaint"
-                       filter_domain="[('complaint_id.name','ilike',self)]"/>
+
+                <field name="complaint_id" string="Complaint"/>
+
                 <field name="state"/>
                 <field name="resolution_type"/>
                 <field name="start_datetime"/>
                 <field name="end_datetime"/>
+
                 <field name="repair_order_ids" string="Services"
                        filter_domain="[('repair_order_ids.name','ilike',self)]"/>
-                <field name="picking_ids" string="Return or replacement"
+
+                <field name="picking_ids" string="Return or Replacement"
                        filter_domain="[('picking_ids.name','ilike',self)]"/>
-                <!-- State Filters -->
+
+                <!-- NEW: Sale Return Requests -->
+                <field name="sale_return_request_ids" string="Sale Returns"
+                       filter_domain="[('sale_return_request_ids.name','ilike',self)]"/>
+
                 <separator/>
+
+                <!-- State Filters -->
                 <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
                 <filter name="filter_assigned" string="Assigned" domain="[('state','=','assigned')]"/>
                 <filter name="filter_done" string="Done" domain="[('state','=','done')]"/>
-                <!-- Group By -->
+
                 <separator/>
+
+                <!-- Group By -->
                 <group expand="0" string="Group By">
-                    <filter name="group_technician" string="Technician" domain="[]"
-                            context="{'group_by':'technician_id'}"/>
-                    <filter name="group_resolution_type" string="Resolution Type" domain="[]"
-                            context="{'group_by':'resolution_type'}"/>
-                    <filter name="group_state" string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter name="group_technician" string="Technician" context="{'group_by':'technician_id'}"/>
+                    <filter name="group_resolution_type" string="Resolution Type" context="{'group_by':'resolution_type'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
     </record>
 
 
+    <!-- ================= ACTION ================= -->
     <record id="action_complaint_assignment" model="ir.actions.act_window">
         <field name="name">Assignments</field>
         <field name="res_model">complaint.assignment</field>
         <field name="view_mode">tree,form</field>
     </record>
+
 </odoo>
