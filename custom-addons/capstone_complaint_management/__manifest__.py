@@ -10,7 +10,7 @@ Long description of module's purpose
     'author': "My Company",
     'website': "https://www.yourcompany.com",
     'category': 'Uncategorized',
-    'version': '17.0.0.7',
+    'version': '17.0.0.8',
     'depends': ['base', 'stock', 'account', 'mail', 'repair', 'capstone_sales_return_custom'],
     'data': [
         'security/security.xml',

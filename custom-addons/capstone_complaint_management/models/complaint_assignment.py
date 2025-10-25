@@ -244,32 +244,60 @@ class ComplaintAssignment(models.Model):
                 # Do NOT auto-close here; closure is handled by _compute_close_after_return
 
             # REPLACEMENT: create outgoing picking (assignment -> customer)
-            elif rec.resolution_type == 'replacement':
+            if rec.resolution_type == 'replacement':
+
                 if not rec.return_location_id:
                     raise UserError(_('Please specify a Return Location.'))
 
                 partner_location = partner.property_stock_customer.id
                 assignment_location = rec.return_location_id.id
 
+                if not complaint.product_line_ids:
+                    raise UserError(_("No products on the complaint for replacement."))
+
+                # 1️⃣ RETURN PICKING (Customer → Return Location)
+                return_picking = self.env['stock.picking'].create({
+                    'picking_type_id': self.env.ref('stock.picking_type_out').id,  # same as your original
+                    'partner_id': partner.id,
+                    'location_id': partner_location,  # from customer
+                    'location_dest_id': assignment_location,  # to service/return location
+                    'origin': complaint.name + " - Return",
+                    'assignment_id': rec.id,
+                    'move_ids_without_package': [
+                        (0, 0, {
+                            'product_id': line.product_id.id,
+                            'name': line.product_id.name,
+                            'product_uom_qty': line.quantity,
+                            'product_uom': line.product_id.uom_id.id,
+                            'location_id': partner_location,
+                            'location_dest_id': assignment_location,
+                        }) for line in complaint.product_line_ids
+                    ],
+                })
+                return_picking.action_confirm()
+
+                # 2️⃣ REPLACEMENT PICKING (Return Location → Customer)
                 replacement_picking = self.env['stock.picking'].create({
                     'picking_type_id': self.env.ref('stock.picking_type_out').id,
                     'partner_id': partner.id,
-                    'location_id': assignment_location,
-                    'location_dest_id': partner_location,
-                    'origin': f"{complaint.name} - Replacement",
+                    'location_id': assignment_location,  # from return location
+                    'location_dest_id': partner_location,  # to customer
+                    'origin': complaint.name + " - Replacement",
                     'assignment_id': rec.id,
-                    'move_ids_without_package': [(0, 0, {
-                        'product_id': line.product_id.id,
-                        'name': f"{line.product_id.name} (Replacement)",
-                        'product_uom_qty': line.quantity,
-                        'product_uom': line.product_id.uom_id.id,
-                        'location_id': assignment_location,
-                        'location_dest_id': partner_location,
-                    }) for line in complaint.product_line_ids],
+                    'move_ids_without_package': [
+                        (0, 0, {
+                            'product_id': line.product_id.id,
+                            'name': f"{line.product_id.name} (Replacement)",
+                            'product_uom_qty': line.quantity,
+                            'product_uom': line.product_id.uom_id.id,
+                            'location_id': assignment_location,
+                            'location_dest_id': partner_location,
+                        }) for line in complaint.product_line_ids
+                    ],
                 })
                 replacement_picking.action_confirm()
 
-        return True
+            return True
 
     # ---------------- SERVICE ---------------- #
 
@@ -282,7 +310,7 @@ class ComplaintAssignment(models.Model):
             for line in complaint.product_line_ids:
                 if not line.product_id:
                     raise UserError(_("Complaint line has no product."))
-                self.env['repair.order'].create({
+                self.env['repair.order'].sudo().create({
                     'product_id': line.product_id.id,
                     'schedule_date': rec.start_datetime,
                     'user_id': rec.technician_id.id,
