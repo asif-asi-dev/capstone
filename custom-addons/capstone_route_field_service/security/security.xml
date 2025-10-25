@@ -27,11 +27,26 @@
         <field name="domain_force">[('salesperson_id', '=', user.id)]</field>
     </record>
 
+     <record id="fsm_shop_visit_rule_manager" model="ir.rule">
+        <field name="name">FSM Shop Visit - Manager Access</field>
+        <field name="model_id" ref="model_fsm_shop_visit"/>
+        <field name="groups" eval="[(4, ref('capstone_route_field_service.group_fsm_route_manager'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
      <record id="fsm_shop_visit_master_rule_salesperson" model="ir.rule">
         <field name="name">Shop Visit Master - Salesperson Access</field>
         <field name="model_id" ref="model_fsm_shop_visit_master"/>
         <field name="groups" eval="[(4, ref('capstone_route_field_service.group_fsm_salesperson'))]"/>
         <field name="domain_force">[('salesperson_id', '=', user.id)]</field>
     </record>
+
+    <record id="fsm_shop_visit_master_rule_manager" model="ir.rule">
+        <field name="name">FSM Shop Visit Master - Manager Access</field>
+        <field name="model_id" ref="model_fsm_shop_visit_master"/>
+        <field name="groups" eval="[(4, ref('capstone_route_field_service.group_fsm_route_manager'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
 
 </odoo>
