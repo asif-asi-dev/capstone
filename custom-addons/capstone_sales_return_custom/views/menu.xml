@@ -4,10 +4,19 @@
               sequence="10"
               action="action_sales_return_order"/>
 
-    <menuitem id="menu_sale_return_requests"
+    <menuitem id="menu_sale_return_requests_root"
               name="Return Requests"
               parent="menu_sales_return_root"
+              sequence="5"/>
+    <menuitem id="menu_sale_return_requests"
+              name="Return Requests"
+              parent="menu_sale_return_requests_root"
               action="capstone_sales_return_custom.action_sale_return_request"
+              sequence="1"/>
+    <menuitem id="menu_sale_return_requests_lines"
+              name="Return Requests Lines"
+              parent="menu_sale_return_requests_root"
+              action="capstone_sales_return_custom.action_sale_return_request_line"
               sequence="5"/>
 
     <menuitem id="menu_sale_return_configuration"

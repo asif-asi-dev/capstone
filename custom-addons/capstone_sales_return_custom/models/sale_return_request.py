@@ -76,6 +76,7 @@ class SaleReturnRequest(models.Model):
     )
     date_requested = fields.Date(string='Date Requested')
     date_approved = fields.Date(string='Date Approved')
+    return_available_qty = fields.Float(string='Return Available Quantity')
 
     def action_submit_for_approval(self):
         for rec in self:
@@ -291,6 +292,7 @@ class SaleReturnRequestLine(models.Model):
 
     notes = fields.Char(string='Notes')
     return_reason_id = fields.Many2one('return.reason',string='Return Reason')
+    return_available_qty = fields.Float(string='Return Available Quantity')
 
     @api.depends('request_id.partner_id', 'product_id', 'lot_id')
     def _compute_invoice_domain(self):
@@ -337,5 +339,14 @@ class SaleReturnRequestLine(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.uom_id = self.product_id.uom_id
+    @api.onchange('sale_order_id')
+    def _onchange_sale_order_id(self):
+        if self.sale_order_id:
+            self.return_available_qty = self.sale_order_id.get_available_sale_qty(self.product_id.id,self.product_id.product_tmpl_id.id)
+        if self.sale_order_id and self.return_available_qty < 1:
+            raise ValidationError(_("No quantity available for return in the corresponding sale order."))
+
+
+
 
 
