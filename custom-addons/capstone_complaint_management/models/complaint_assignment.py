@@ -170,7 +170,7 @@ class ComplaintAssignment(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'stock.picking',
             'domain': [('id', 'in', self.picking_ids.ids)],
-            'context': {'default_assignment_id': self.id},
+            'context': {'default_assignment_id': self.id,'create': False},
         }
 
     def action_view_repairs(self):
@@ -181,7 +181,7 @@ class ComplaintAssignment(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'repair.order',
             'domain': [('assignment_id', '=', self.id)],
-            'context': {'default_assignment_id': self.id},
+            'context': {'default_assignment_id': self.id, 'create': False},
         }
 
     def action_view_sale_return_requests(self):
@@ -192,7 +192,7 @@ class ComplaintAssignment(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'sale.return.request',
             'domain': [('assignment_id', '=', self.id)],
-            'context': {'default_assignment_id': self.id},
+            'context': {'default_assignment_id': self.id, 'create': False},
         }
 
     # ---------------- STATE ACTIONS ---------------- #
