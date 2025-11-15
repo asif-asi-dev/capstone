@@ -225,7 +225,7 @@ class SaleReturnRequest(models.Model):
             'view_mode': 'form',
             'res_model': 'sales.return.order',
             'res_id': self.return_order_id.id,
-            'context': {'create': False, 'edit': False}
+            'context': {'create': False, 'edit': True}
         }
 
 
@@ -341,10 +341,11 @@ class SaleReturnRequestLine(models.Model):
             self.uom_id = self.product_id.uom_id
     @api.onchange('sale_order_id')
     def _onchange_sale_order_id(self):
-        if self.sale_order_id:
+        if self.sale_order_id and self.product_id:
             self.return_available_qty = self.sale_order_id.get_available_sale_qty(self.product_id.id,self.product_id.product_tmpl_id.id)
-        if self.sale_order_id and self.return_available_qty < 1:
-            raise ValidationError(_("No quantity available for return in the corresponding sale order."))
+            if self.return_available_qty < 1:
+                raise ValidationError(_("No quantity available for return in the corresponding sale order."))
+
 
 
 

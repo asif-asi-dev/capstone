@@ -11,10 +11,14 @@
                        readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="context">{'is_discount_sale': parent.is_discount_sale,'warehouse_id': parent.warehouse_id,}</attribute>
+                <attribute name="context">{'is_discount_sale': parent.is_discount_sale,'warehouse_id':
+                    parent.warehouse_id,}
+                </attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
-                <attribute name="context">{'is_discount_sale': parent.is_discount_sale,'warehouse_id': parent.warehouse_id,}</attribute>
+                <attribute name="context">{'is_discount_sale': parent.is_discount_sale,'warehouse_id':
+                    parent.warehouse_id,}
+                </attribute>
             </xpath>
         </field>
     </record>
@@ -33,7 +37,6 @@
                     <field name="sale_return_count" widget="statinfo" string="Sale Returns"/>
                 </button>
             </xpath>
-            <!-- Make sure Odoo knows about the field -->
             <xpath expr="//sheet" position="inside">
                 <field name="sale_return_ids" invisible="1"/>
             </xpath>
@@ -45,12 +48,14 @@
         <field name="name">Discount Sales</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_ids"
-               eval="[(5, 0, 0), (0, 0, {'view_mode': 'form', 'view_id': ref('capstone_sales_return_custom.view_order_form_discount_location')})]"/>
+        <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_order_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('capstone_sales_return_custom.view_order_form_discount_location')})
+    ]"/>
         <field name="domain">[('is_discount_sale', '=', True)]</field>
         <field name="context">{'default_is_discount_sale': True}</field>
     </record>
-
 
 
 </odoo>
