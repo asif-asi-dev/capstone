@@ -1,7 +1,7 @@
 from odoo import models, fields, api, Command,_
 import json
 import logging
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -35,10 +35,10 @@ class SaleReturnRequest(models.Model):
     notes = fields.Text(string='Notes')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('submitted', 'Submitted For Approval'),
-        ('processing', 'Under Inspection'),
+        ('waiting_for_pickup', 'Waiting For Pickup'),
+        ('submitted', 'Collected And Submitted For Approval'),
         ('done', 'Done'),
-        ('cancelled', 'Cancelled')
+        ('cancelled', 'Cancelled'),
     ], default='draft', tracking=True)
 
     # Related fields for warehouse processing
@@ -75,14 +75,103 @@ class SaleReturnRequest(models.Model):
         string="Return Lines"
     )
     date_requested = fields.Date(string='Date Requested')
+    requested_by = fields.Many2one('res.users',string='Requested By')
     date_approved = fields.Date(string='Date Approved')
     return_available_qty = fields.Float(string='Return Available Quantity')
+    collected_by = fields.Many2one('res.users', string='Collected By')
+    collected_date = fields.Date(string='Collected Date')
+    credit_note_id = fields.Many2one('account.move', string='Credit Note')
 
-    def action_submit_for_approval(self):
+    def action_view_credit_note(self):
+        self.ensure_one()
+        if not self.credit_note_id:
+            raise UserError("No credit note found.")
+
+        return {
+            'name': 'Credit Note',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.credit_note_id.id,
+            'target': 'current',
+        }
+
+    def action_create_credit_note(self):
+        """ Public button method """
+        self.ensure_one()
+        credit_note = self._create_custom_credit_note()
+
+        # Return action to open draft credit note
+        return {
+            'name': 'Credit Note',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': credit_note.id,
+            'target': 'current',
+        }
+
+    def _create_custom_credit_note(self):
+        """ Create draft credit note using return request lines """
+        self.ensure_one()
+
+        if not self.line_ids:
+            raise UserError("No return request lines found.")
+
+        partner = self.partner_id
+        company = self.env.company
+        currency = company.currency_id
+
+        credit_note_vals = {
+            'move_type': 'out_refund',  # credit note
+            'partner_id': partner.id,
+            'invoice_date': fields.Date.today(),
+            'company_id': company.id,
+            'currency_id': currency.id,
+            'invoice_origin': self.name,
+            'invoice_line_ids': [],
+        }
+
+        line_vals_list = []
+
+        for line in self.line_ids:
+            if line.return_qty <= 0:
+                continue
+
+            line_vals = {
+                'product_id': line.product_id.id,
+                'name': line.product_id.display_name,
+                'quantity': line.return_qty,
+                'price_unit': line.price_unit,
+                'tax_ids': [(6, 0, line.tax_ids.ids)],
+            }
+
+            line_vals_list.append((0, 0, line_vals))
+
+        if not line_vals_list:
+            raise UserError("There are no valid return quantities to create a credit note.")
+
+        credit_note_vals['invoice_line_ids'] = line_vals_list
+
+        credit_note = self.env['account.move'].create(credit_note_vals)
+        self.credit_note_id = credit_note.id
+
+        return credit_note
+
+
+
+    def action_collect_and_submit_for_approval(self):
+        for rec in self:
+            if rec.state == 'waiting_for_pickup':
+                rec.collected_by = self.env.user.id
+                rec.collected_date = fields.Date.today()
+                rec.state = 'submitted'
+    def action_submit_for_pickup(self):
         for rec in self:
             if rec.state == 'draft':
-                rec.state = 'submitted'
+                rec.state = 'waiting_for_pickup'
                 rec.date_requested = fields.Date.today()
+                rec.requested_by = self.env.user.id
     def action_cancel(self):
         for rec in self:
             if rec.state == 'submitted':
@@ -293,6 +382,66 @@ class SaleReturnRequestLine(models.Model):
     notes = fields.Char(string='Notes')
     return_reason_id = fields.Many2one('return.reason',string='Return Reason')
     return_available_qty = fields.Float(string='Return Available Quantity')
+    tax_ids = fields.Many2many('account.tax', string='Taxes')
+    total_amount = fields.Float(
+        string='Total Amount',
+        digits='Product Price',
+        compute='_compute_total_amount',
+        store=True
+    )
+    price_unit = fields.Float(string='Price Unit', digits='Product Price')
+
+    @api.depends('price_unit', 'return_qty', 'tax_ids', 'invoice_id')
+    def _compute_total_amount(self):
+        for line in self:
+            price_unit = line.price_unit or 0.0
+            qty = line.return_qty or 0.0
+            taxes = line.tax_ids
+
+            # Priority: invoice currency → environment company currency
+            currency = (
+                line.invoice_id.currency_id
+                if line.invoice_id
+                else self.env.company.currency_id
+            )
+
+            if taxes:
+                tax_data = taxes.compute_all(
+                    price_unit,
+                    currency=currency,
+                    quantity=qty
+                )
+                line.total_amount = tax_data['total_included']
+            else:
+                line.total_amount = price_unit * qty
+
+    @api.onchange('product_id', 'invoice_id')
+    def _onchange_product_or_invoice(self):
+
+        for line in self:
+            price_unit = 0.0
+            tax_ids = self.env['account.tax']
+
+            # --------------------------------------
+            # 1) Fetch from invoice line if invoice available
+            # --------------------------------------
+            if line.invoice_id and line.product_id:
+                inv_line = line.invoice_id.invoice_line_ids.filtered(
+                    lambda l: l.product_id == line.product_id
+                )
+                if inv_line:
+                    # If multiple lines, take the first matching
+                    inv_line = inv_line[0]
+                    line.price_unit = inv_line.price_unit
+                    line.tax_ids = inv_line.tax_ids
+                    continue   # ✔ done
+
+            # --------------------------------------
+            # 2) Else: fetch from product master
+            # --------------------------------------
+            if line.product_id:
+                line.price_unit = line.product_id.list_price
+                line.tax_ids = line.product_id.taxes_id
 
     @api.depends('request_id.partner_id', 'product_id', 'lot_id')
     def _compute_invoice_domain(self):
