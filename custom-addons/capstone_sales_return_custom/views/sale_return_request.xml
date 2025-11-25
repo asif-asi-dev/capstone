@@ -41,7 +41,7 @@
                     <button name="action_create_credit_note"
                             string="Create Credit Note"
                             type="object"
-                            invisible="credit_note_id != False"
+                            invisible="state != 'done' or credit_note_id != True"
                             class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>

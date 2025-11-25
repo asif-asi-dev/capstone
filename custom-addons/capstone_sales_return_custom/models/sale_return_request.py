@@ -169,9 +169,12 @@ class SaleReturnRequest(models.Model):
     def action_submit_for_pickup(self):
         for rec in self:
             if rec.state == 'draft':
-                rec.state = 'waiting_for_pickup'
-                rec.date_requested = fields.Date.today()
-                rec.requested_by = self.env.user.id
+                if line_ids:
+                    rec.state = 'waiting_for_pickup'
+                    rec.date_requested = fields.Date.today()
+                    rec.requested_by = self.env.user.id
+                else:
+                    raise UserError("No return lines found for this request.")
     def action_cancel(self):
         for rec in self:
             if rec.state == 'submitted':
