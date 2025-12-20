@@ -72,6 +72,7 @@
                                     <field name="product_id" required="1"
                                            domain="[('id', 'in', parent.allowed_product_ids)]"
                                            readonly="parent.state not in ['draft', 'processing']"/>
+                                    <field name="return_type" readonly="parent.state not in ['draft', 'processing']"/>
                                     <field name="invoice_id" readonly="1"/>
                                     <field name="sale_order_id" readonly="1"/>
                                     <field name="quantity" required="1" readonly="1" string="Return Request Quantity" force_save="1"/>

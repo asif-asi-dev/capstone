@@ -169,7 +169,7 @@ class SaleReturnRequest(models.Model):
     def action_submit_for_pickup(self):
         for rec in self:
             if rec.state == 'draft':
-                if line_ids:
+                if rec.line_ids:
                     rec.state = 'waiting_for_pickup'
                     rec.date_requested = fields.Date.today()
                     rec.requested_by = self.env.user.id
@@ -287,6 +287,7 @@ class SaleReturnRequest(models.Model):
                 'return_reason_id': line.return_reason_id.id if line.return_reason_id else False,
                 'sale_order_id':line.sale_order_id.id if line.sale_order_id else False,
                 'invoice_id':line.invoice_id.id if line.invoice_id else False,
+                'return_type': line.return_type,
             }))
         sales_return_order = SalesReturnOrder.create({
             'line_ids': order_lines,
@@ -393,6 +394,10 @@ class SaleReturnRequestLine(models.Model):
         store=True
     )
     price_unit = fields.Float(string='Price Unit', digits='Product Price')
+    return_type = fields.Selection([
+        ('return', 'Return'),
+        ('replacement', 'Replacement')
+    ], string='Return Type', default='return', required=True)
 
     @api.depends('price_unit', 'return_qty', 'tax_ids', 'invoice_id')
     def _compute_total_amount(self):
