@@ -153,6 +153,49 @@ class SalesReturnOrder(models.Model):
 
             pickings_to_add.append((4, return_picking.id))
 
+        # Handle Replacements: creating extra out picking
+        replacement_lines = self.line_ids.filtered(lambda l: l.return_type == 'replacement')
+        if replacement_lines:
+            customer_location = self.partner_id.property_stock_customer
+            if not customer_location:
+                raise UserError(_("Customer location is missing for partner %s.") % self.partner_id.name)
+
+            picking_type = self.env['stock.picking.type'].search([
+                ('code', '=', 'outgoing'),
+                ('warehouse_id', '=', warehouse.id)
+            ], limit=1)
+
+            if not picking_type:
+                raise UserError(_("No outgoing picking type found for warehouse %s.") % warehouse.name)
+
+            move_vals_list = []
+            for line in replacement_lines:
+                move_vals = {
+                    'name': _("Replacement: %s") % line.product_id.name,
+                    'product_id': line.product_id.id,
+                    'product_uom_qty': line.return_qty,
+                    'product_uom': line.uom_id.id,
+                    'location_id': warehouse.lot_stock_id.id,
+                    'location_dest_id': customer_location.id,
+                }
+                move_vals_list.append((0, 0, move_vals))
+
+            replacement_picking = self.env['stock.picking'].create({
+                'partner_id': self.partner_id.id,
+                'picking_type_id': picking_type.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': customer_location.id,
+                'origin': _("Replacement for %s") % self.name,
+                'move_ids_without_package': move_vals_list,
+                'is_locked': False,  # Allow manual editing and lot selection
+            })
+
+            # Action confirm and assign - Odoo will handle reservaion and move lines
+            replacement_picking.action_confirm()
+            replacement_picking.action_assign()
+
+            pickings_to_add.append((4, replacement_picking.id))
+
         # Link all pickings to this return order
         self.picking_ids = pickings_to_add
 
@@ -192,6 +235,10 @@ class SalesReturnOrderLine(models.Model):
         domain="[('partner_id', '=', parent.partner_id)]"
     )
     invoice_id = fields.Many2one('account.move', string='Invoice Reference')
+    return_type = fields.Selection([
+        ('return', 'Return'),
+        ('replacement', 'Replacement')
+    ], string='Return Type', default='return', required=True)
 
 
 
