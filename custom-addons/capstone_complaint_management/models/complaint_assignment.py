@@ -82,6 +82,8 @@ class ComplaintAssignment(models.Model):
     sale_return_request_count = fields.Integer(string="Sale Returns", compute="_compute_sale_return_request_count")
 
     hours_taken = fields.Float(string="Hours Taken", compute='_compute_hours_taken', store=True)
+    google_map_link = fields.Char("Google Map Location URL", related='complaint_id.google_map_link')
+
 
     # ---------------- COMPUTES (Serialization-safe) ---------------- #
 
@@ -322,3 +324,27 @@ class ComplaintAssignment(models.Model):
                     'assignment_id': rec.id,
                     'state': 'draft',
                 })
+
+    def action_open_reassign_wizard(self):
+        self.ensure_one()
+
+        if self.state != 'assigned':
+            raise UserError(_('Only assigned complaints can be reassigned.'))
+
+        if self.picking_ids or self.repair_order_ids or self.sale_return_request_ids:
+            raise UserError(
+                _('Reassignment is not allowed once return, replacement, or service has started.')
+            )
+
+        return {
+            'name': _('Reassign Technician'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'complaint.assignment.reassign.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_assignment_id': self.id,
+                'default_new_technician_id': False,
+            }
+        }
+
