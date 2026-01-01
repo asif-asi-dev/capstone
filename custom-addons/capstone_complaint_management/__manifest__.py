@@ -10,7 +10,7 @@ Long description of module's purpose
     'author': "My Company",
     'website': "https://www.yourcompany.com",
     'category': 'Uncategorized',
-    'version': '17.0.0.9',
+    'version': '17.0.0.10',
     'depends': ['base', 'stock', 'account', 'mail', 'repair', 'capstone_sales_return_custom'],
     'data': [
         'security/security.xml',
@@ -24,6 +24,7 @@ Long description of module's purpose
         'views/template_complaint_form.xml',
         'views/sale_return_request_view.xml',
         'views/repair_view.xml',
+        'wizard/reassignement_wizard_views.xml',
         'views/menu.xml',
     ],
 }
