@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_category_capstone_staff">
+            <field name="name">Capstone Staff</field>
+            <field name="description">User access levels for Capstone staff members.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Managing Director -->
+        <record id="group_managing_director" model="res.groups">
+            <field name="name">Managing Director</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Finance -->
+        <record id="group_finance_manager" model="res.groups">
+            <field name="name">Finance Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Business Development -->
+        <record id="group_bd_manager" model="res.groups">
+            <field name="name">Business Development Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Marketing -->
+        <record id="group_marketing_assistant" model="res.groups">
+            <field name="name">Marketing Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_marketing_manager" model="res.groups">
+            <field name="name">Assistant Marketing Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+            <field name="implied_ids" eval="[(4, ref('group_marketing_assistant'))]"/>
+        </record>
+
+        <record id="group_marketing_executive" model="res.groups">
+            <field name="name">Marketing Executive cum Graphic Designer</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Service -->
+        <record id="group_service_assistant" model="res.groups">
+            <field name="name">Service Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_service_technician" model="res.groups">
+            <field name="name">Service Technician</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Sales -->
+        <record id="group_sales_assistant" model="res.groups">
+            <field name="name">Sales Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_sales_tsi" model="res.groups">
+            <field name="name">Sales TSI</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_sales_manager" model="res.groups">
+            <field name="name">Sales Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+            <field name="implied_ids" eval="[(4, ref('group_sales_assistant'))]"/>
+        </record>
+
+        <!-- Procurement and Logistics -->
+        <record id="group_procurement_manager" model="res.groups">
+            <field name="name">Procurement &amp; Logistics Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_procurement_assistant" model="res.groups">
+            <field name="name">Procurement &amp; Logistic Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_store_assistant" model="res.groups">
+            <field name="name">Store Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_packing_staff" model="res.groups">
+            <field name="name">Packing Staff</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_driver" model="res.groups">
+            <field name="name">Driver</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Office Staff -->
+        <record id="group_coo" model="res.groups">
+            <field name="name">Fractional COO</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_office_coordinator" model="res.groups">
+            <field name="name">Office Co-ordinator</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_office_assistant" model="res.groups">
+            <field name="name">Office Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_sweeper" model="res.groups">
+            <field name="name">Sweeper</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Accounts -->
+        <record id="group_account_assistant" model="res.groups">
+            <field name="name">Account Assistant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_chief_accountant" model="res.groups">
+            <field name="name">Chief Accountant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+            <field name="implied_ids" eval="[(4, ref('group_account_assistant'))]"/>
+        </record>
+
+        <record id="group_cashier" model="res.groups">
+            <field name="name">Cashier</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <!-- Production Unit -->
+        <record id="group_factory_manager" model="res.groups">
+            <field name="name">Factory Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_factory_accountant" model="res.groups">
+            <field name="name">Factory Accountant</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+        <record id="group_purchase_manager" model="res.groups">
+            <field name="name">Purchase Manager</field>
+            <field name="category_id" ref="module_category_capstone_staff"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 
+            Override the view from web_responsive to prevent crash.
+            The crash occurs because the view 'view_users_form_web_responsive' exists in DB 
+            (from v17 module) but the loaded module (v16 from oca_addons) is missing the file.
+            We patch it to be openable but empty of customizations to match the v16 backend.
+        -->
+        <record id="web_responsive.view_users_form_web_responsive" model="ir.ui.view">
+            <field name="name">res.users.form.web.responsive.patch</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <!-- Intentionally empty to neutralize the view -->
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>
