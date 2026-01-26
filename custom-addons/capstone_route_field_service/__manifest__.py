@@ -18,7 +18,7 @@ Long description of module's purpose
     'version': '17.0.1.7',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'sale', 'hr_expense', 'account', 'stock'],
+    'depends': ['base', 'crm', 'sale', 'hr_expense', 'account', 'stock','capstone_sales_return_custom'],
 
     # always loaded
     'data': [
