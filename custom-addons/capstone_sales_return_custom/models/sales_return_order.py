@@ -188,11 +188,12 @@ class SalesReturnOrder(models.Model):
                 'origin': _("Replacement for %s") % self.name,
                 'move_ids_without_package': move_vals_list,
                 'is_locked': False,  # Allow manual editing and lot selection
+                'is_replacement':True
             })
 
             # Action confirm and assign - Odoo will handle reservaion and move lines
-            replacement_picking.action_confirm()
-            replacement_picking.action_assign()
+            # replacement_picking.action_confirm()
+            # replacement_picking.action_assign()
 
             pickings_to_add.append((4, replacement_picking.id))
 

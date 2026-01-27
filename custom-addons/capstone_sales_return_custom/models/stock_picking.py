@@ -16,6 +16,7 @@ class StockPicking(models.Model):
         'sales.return.order',
         string="Return Order",
         readonly=True)
+    is_replacement = fields.Boolean(default = False)
 
 
     def action_open_sales_return_order(self):
