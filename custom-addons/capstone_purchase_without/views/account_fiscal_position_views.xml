@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_position_form_purchase_without" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.purchase.without</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_without_fiscal_position"
+                       readonly="1"
+                       invisible="not is_without_fiscal_position"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

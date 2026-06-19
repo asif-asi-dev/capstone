@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="fiscal_position_without" model="account.fiscal.position">
+            <field name="name">Fiscal Position Without Bill</field>
+            <field name="is_without_fiscal_position">True</field>
+        </record>
+    </data>
+</odoo>
