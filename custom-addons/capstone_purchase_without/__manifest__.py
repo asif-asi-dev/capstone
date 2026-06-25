@@ -12,6 +12,8 @@
     'version': '17.0.0.1',
     'depends': [
         'purchase',
+        'purchase_stock',
+        'stock',
         'account',
     ],
     'data': [

@@ -12,6 +12,9 @@
     'version': '17.0.0.1',
     'depends': [
         'sale_management',
+        'sale_stock',
+        'stock',
+        'account',
         'capstone_purchase_without',
     ],
     'data': [
