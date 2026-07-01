@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_purchase_without" model="ir.ui.view">
+        <field name="name">purchase.order.form.purchase.without</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="is_purchase_without"
+                       invisible="1"
+                       readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="readonly">is_purchase_without</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_orders_without" model="ir.actions.act_window">
+        <field name="name">Orders (Without)</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('capstone_purchase_without.view_purchase_order_form_purchase_without')}),
+        ]"/>
+        <field name="domain">[('is_purchase_without', '=', True)]</field>
+        <field name="context" eval="{'default_is_purchase_without': True, 'default_fiscal_position_id': ref('capstone_purchase_without.fiscal_position_without')}"/>
+    </record>
+</odoo>

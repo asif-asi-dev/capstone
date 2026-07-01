@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_sale_orders_without"
+              name="Orders (Without)"
+              parent="sale.sale_order_menu"
+              action="capstone_sales_without.action_sale_orders_without"
+              groups="sales_team.group_sale_salesman"
+              sequence="25"/>
+</odoo>

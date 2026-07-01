@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_sale_without" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.without</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="is_sale_without"
+                       invisible="1"
+                       readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="readonly">is_sale_without</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_orders_without" model="ir.actions.act_window">
+        <field name="name">Orders (Without)</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_order_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('capstone_sales_without.view_order_form_sale_without')}),
+        ]"/>
+        <field name="domain">[('is_sale_without', '=', True)]</field>
+        <field name="context" eval="{'default_is_sale_without': True, 'default_fiscal_position_id': ref('capstone_purchase_without.fiscal_position_without')}"/>
+    </record>
+</odoo>
