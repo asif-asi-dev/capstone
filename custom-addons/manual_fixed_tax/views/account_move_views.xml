@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_manual_gst" model="ir.ui.view">
+        <field name="name">account.move.form.manual.gst</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add the technical field (hidden column) so it's available to the readonly expression -->
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
+                   position="before">
+                <field name="has_manual_gst" column_invisible="True"/>
+            </xpath>
+
+            <!-- Lock quantity to read-only whenever the line carries a Manual Fixed Tax -->
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
+                   position="attributes">
+                <attribute name="readonly">has_manual_gst</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+        These are STARTER records. After install, open each tax and:
+          1. Set the correct GST Payable / Receivable account on the
+             Definition tab (match your existing 5%/18% GST taxes).
+          2. Copy the exact same Tax Grids / Tags used by your real GST
+             taxes on the Advanced tab, so this shows up correctly in
+             the OCA Tax Report / GST return.
+          3. Set the Tax Group to match your existing GST group if you
+             want it consolidated under "GST" in report totals.
+
+        Usage on a line:
+          - Apply this tax instead of the 5%/18% GST tax.
+          - Quantity is auto-locked to 1 by this module.
+          - Type the actual manual GST amount (e.g. 25) into Price Unit.
+          - Tax computed = Price Unit x 1 = the amount you typed.
+    -->
+
+    <record id="tax_gst_manual_sale" model="account.tax">
+        <field name="name">GST - Manual</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">1</field>
+        <field name="is_manual_fixed_tax">True</field>
+        <field name="description">GST - Manual</field>
+    </record>
+
+    <record id="tax_gst_manual_purchase" model="account.tax">
+        <field name="name">GST - Manual</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">1</field>
+        <field name="is_manual_fixed_tax">True</field>
+        <field name="description">GST - Manual</field>
+    </record>
+
+</odoo>

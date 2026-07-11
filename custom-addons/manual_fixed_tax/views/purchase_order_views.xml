@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_order_form_manual_gst" model="ir.ui.view">
+        <field name="name">purchase.order.form.manual.gst</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty'][1]"
+                   position="before">
+                <field name="has_manual_gst" column_invisible="True"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty'][1]"
+                   position="attributes">
+                <attribute name="readonly">has_manual_gst</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

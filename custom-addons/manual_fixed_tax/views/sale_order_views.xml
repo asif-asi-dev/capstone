@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_manual_gst" model="ir.ui.view">
+        <field name="name">sale.order.form.manual.gst</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']"
+                   position="before">
+                <field name="has_manual_gst" column_invisible="True"/>
+            </xpath>
+
+            <!-- product_uom_qty already carries readonly="is_downpayment" natively -->
+            <!-- merge conditions instead of overwriting, so downpayment lines stay protected too -->
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']"
+                   position="attributes">
+                <attribute name="readonly">is_downpayment or has_manual_gst</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
