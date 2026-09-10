@@ -1,7 +1,7 @@
 <odoo>
     <data>
-        <!-- Update main menu to point to custom homepage -->
-        <record id="homepage_page" model="website.menu">
+        <!-- Dedicated link to this module's custom homepage. -->
+        <record id="homepage_menu" model="website.menu">
             <field name="name">Home</field>
             <field name="url">/</field>
             <field name="page_id" ref="website.homepage_page"/>
