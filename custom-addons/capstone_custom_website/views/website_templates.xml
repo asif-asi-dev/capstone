@@ -1,112 +1,32 @@
 <odoo>
-    <template id="homepage" name="Capstone Homepage">
-
+    <template id="homepage" name="Capstone Bath Fittings Homepage">
         <t t-call="website.layout">
-            <div id="wrap" class="capstone-homepage">
-
-                <!-- HERO SECTION -->
-                <section class="hero-section position-relative">
-                    <div class="water-animation"></div>
-                    <div class="container position-relative z-2 text-center">
-                        <h1 class="hero-title">Capstone Bath Fittings</h1>
-                        <p class="hero-subtitle">Innovative design. Elegant finish. Built to last.</p>
-                        <a href="#products" class="btn btn-explore">Explore Products</a>
-                    </div>
-                    <div class="hero-wave">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-                                  opacity=".25" fill="#f8f9fa"></path>
-                            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
-                                  opacity=".5" fill="#f8f9fa"></path>
-                            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
-                                  fill="#f8f9fa"></path>
-                        </svg>
-                    </div>
-                </section>
-
-                <!-- ABOUT SECTION -->
-                <section class="about-section section-padding">
-                    <div class="container">
-                        <div class="text-center mb-5">
-                            <h2 class="section-title">About Capstone</h2>
-                            <p class="section-subtitle">Setting standards for healthy, responsible, and beautiful
-                                living
-                            </p>
-                        </div>
-                        <div class="row g-0 about-row">
-                            <div class="col-lg-6 about-carousel-col">
-                                <div class="about-carousel h-100">
-                                    <div id="aboutCarousel" class="carousel slide h-100" data-bs-ride="carousel">
-                                        <div class="carousel-indicators">
-                                            <button type="button" data-bs-target="#aboutCarousel" data-bs-slide-to="0"
-                                                    class="active" aria-current="true" aria-label="Slide 1"></button>
-                                            <button type="button" data-bs-target="#aboutCarousel" data-bs-slide-to="1"
-                                                    aria-label="Slide 2"></button>
-                                            <button type="button" data-bs-target="#aboutCarousel" data-bs-slide-to="2"
-                                                    aria-label="Slide 3"></button>
-                                            <button type="button" data-bs-target="#aboutCarousel" data-bs-slide-to="3"
-                                                    aria-label="Slide 4"></button>
-                                        </div>
-                                        <div class="carousel-inner h-100">
-                                            <div class="carousel-item active h-100">
-                                                <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                                     class="carousel-image" alt="Luxury Bathroom"/>
-                                            </div>
-                                            <div class="carousel-item h-100">
-                                                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
-                                                     class="carousel-image" alt="Modern Bathroom"/>
-                                            </div>
-                                            <div class="carousel-item h-100">
-                                                <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
-                                                     class="carousel-image" alt="Bath Fittings"/>
-                                            </div>
-                                            <div class="carousel-item h-100">
-                                                <img src="https://images.unsplash.com/photo-1620626011761-996317b8d101?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
-                                                     class="carousel-image" alt="Bathroom Accessories"/>
-                                            </div>
-                                        </div>
-                                        <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#aboutCarousel" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                                data-bs-target="#aboutCarousel" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
-                                    </div>
+            <main id="wrap" class="capstone-homepage">
+                <section class="capstone-hero">
+                    <div class="capstone-hero__orb capstone-hero__orb--one"/>
+                    <div class="capstone-hero__orb capstone-hero__orb--two"/>
+                    <div class="container capstone-hero__content">
+                        <div class="row align-items-center g-5">
+                            <div class="col-lg-7">
+                                <p class="capstone-eyebrow"><span/> Bath fittings &amp; accessories</p>
+                                <h1>Designed for everyday comfort. Built to last.</h1>
+                                <p class="capstone-hero__lead">Capstone brings thoughtful design, dependable quality and an elegant finish to bathrooms, homes and projects of every scale.</p>
+                                <div class="capstone-actions">
+                                    <a href="#catalogue" class="capstone-btn capstone-btn--primary">Explore the collection <i class="fa fa-arrow-right"/></a>
+                                    <a href="/contactus" class="capstone-btn capstone-btn--light">Talk to our team</a>
+                                </div>
+                                <div class="capstone-trust-row" aria-label="Capstone commitments">
+                                    <span><i class="fa fa-check-circle"/> Quality-led</span>
+                                    <span><i class="fa fa-check-circle"/> Water conscious</span>
+                                    <span><i class="fa fa-check-circle"/> Service backed</span>
                                 </div>
                             </div>
-                            <div class="col-lg-6 about-content-col">
-                                <div class="about-content h-100 d-flex flex-column justify-content-center">
-                                    <div class="content-wrapper">
-                                        <p>Capstone has led the way in developing innovative bathroom fittings and
-                                            accessories that have set and re-set the standards for living healthy,
-                                            living
-                                            responsibly, and living beautifully.
-                                        </p>
-                                        <p>From the time of our inception, we are helping our customers to redefine
-                                            their
-                                            lifestyle by offering elegant bathroom fittings at moderate price without
-                                            compromising in their quality. We put our products through a punishing
-                                            regimen
-                                            of durability testing. Stand behind them with a comprehensive warranty and
-                                            offer
-                                            a wide selection and with high quality kept in mind.
-                                        </p>
-                                        <p>At Capstone we make our customer feel that the product is designed
-                                            exclusively
-                                            for them. We listen closely to what consumers want and need, invest in
-                                            extensive
-                                            research and design, and apply smart technological solutions that really do
-                                            make
-                                            our customers' life easier.
-                                        </p>
-                                        <p>We are at the cutting edge of product innovation. We are also committed to
-                                            preserving and protecting the environment by minimizing the impact of its
-                                            activities.
-                                        </p>
+                            <div class="col-lg-5">
+                                <div class="capstone-hero__product-card">
+                                    <img src="/capstone_custom_website/static/src/img/img_1.jpg" alt="Capstone bath fittings collection"/>
+                                    <div class="capstone-hero__product-label">
+                                        <span>Since our first fitting</span>
+                                        <strong>Experience comfort</strong>
                                     </div>
                                 </div>
                             </div>
@@ -114,431 +34,137 @@
                     </div>
                 </section>
 
-                <style>
-                    /* About Section Improvements */
-                    .about-row {
-                    min-height: 600px; /* Set a minimum height for equal sizing */
-                    }
-
-                    .about-carousel-col,
-                    .about-content-col {
-                    min-height: 600px; /* Ensure both columns have the same minimum height */
-                    }
-
-                    .about-carousel {
-                    border-radius: 15px;
-                    overflow: hidden;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                    }
-
-                    .carousel-image {
-                    width: 100%;
-                    height: 600px; /* Fixed height for carousel images */
-                    object-fit: cover;
-                    object-position: center;
-                    }
-
-                    .about-content {
-                    padding: 40px;
-                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                    border-radius: 15px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-                    }
-
-                    .content-wrapper {
-                    max-width: 100%;
-                    }
-
-                    .about-content p {
-                    font-size: 16px;
-                    line-height: 1.7;
-                    color: #555;
-                    margin-bottom: 20px;
-                    text-align: justify;
-                    }
-
-                    .about-content p:last-child {
-                    margin-bottom: 0;
-                    }
-
-                    .carousel-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(0, 0, 0, 0.4);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    }
-
-                    .carousel-item:hover .carousel-overlay {
-                    opacity: 1;
-                    }
-
-                    .overlay-content {
-                    text-align: center;
-                    color: white;
-                    }
-
-                    .overlay-content i {
-                    font-size: 3rem;
-                    margin-bottom: 15px;
-                    color: #007bff;
-                    }
-
-                    .overlay-content h3 {
-                    font-size: 1.8rem;
-                    font-weight: 600;
-                    margin-bottom: 10px;
-                    }
-
-                    .overlay-content p {
-                    font-size: 1.1rem;
-                    margin: 0;
-                    opacity: 0.9;
-                    }
-
-                    /* Responsive adjustments */
-                    @media (max-width: 991.98px) {
-                    .about-row {
-                    min-height: auto;
-                    }
-
-                    .about-carousel-col,
-                    .about-content-col {
-                    min-height: auto;
-                    }
-
-                    .carousel-image {
-                    height: 400px;
-                    }
-
-                    .about-content {
-                    padding: 30px;
-                    margin-top: 30px;
-                    }
-                    }
-
-                    @media (max-width: 767.98px) {
-                    .carousel-image {
-                    height: 300px;
-                    }
-
-                    .about-content {
-                    padding: 20px;
-                    }
-
-                    .about-content p {
-                    font-size: 15px;
-                    }
-                    }
-                </style>
-                <script>
-                    // Initialize carousel with auto-rotation and pause on hover
-                    document.addEventListener('DOMContentLoaded', function() {
-                    const myCarousel = document.getElementById('aboutCarousel');
-                    const carousel = new bootstrap.Carousel(myCarousel, {
-                    interval: 4000,
-                    wrap: true,
-                    pause: 'hover'
-                    });
-
-                    // Add smooth scrolling for anchor links
-                    <!--            document.querySelectorAll('a[href^="#"]').forEach(anchor => {-->
-                    <!--                anchor.addEventListener('click', function(e) {-->
-                    <!--                    e.preventDefault();-->
-                    <!--                    document.querySelector(this.getAttribute('href')).scrollIntoView({-->
-                    <!--                        behavior: 'smooth'-->
-                    <!--                    });-->
-                    <!--                });-->
-                    <!--            });-->
-                    });
-                </script>
-
-
-                <!-- FEATURES SECTION -->
-                <section class="features-section py-5 bg-light">
+                <section class="capstone-intro section-space">
                     <div class="container">
-                        <div class="text-center mb-5">
-                            <h2 class="section-title">Why Choose Capstone</h2>
-                            <p class="section-subtitle">Premium quality for the discerning homeowner</p>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-lg-5">
+                                <div class="capstone-intro__visual">
+                                    <div class="capstone-intro__accent"/>
+                                    <img src="/capstone_custom_website/static/src/img/img_1.jpg" alt="Capstone bath fittings" loading="lazy"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <p class="capstone-eyebrow capstone-eyebrow--dark"><span/> The Capstone way</p>
+                                <h2 class="capstone-heading">Beautifully considered fittings for the way people live.</h2>
+                                <div class="capstone-copy">
+                                    <p>Capstone develops innovative bathroom fittings and accessories that help people live healthy, responsibly and beautifully.</p>
+                                    <p>We help customers redefine their lifestyle with elegant bath fittings at a moderate price, without compromising on quality. Every product is made with durability, dependable performance and a comprehensive warranty in mind.</p>
+                                    <p>By listening closely to what consumers need and investing in research, design and smart technology, we create solutions that make everyday life easier.</p>
+                                </div>
+                                <a href="/contactus" class="capstone-text-link">Build your next project with Capstone <i class="fa fa-arrow-right"/></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="capstone-values section-space">
+                    <div class="container">
+                        <div class="capstone-section-header">
+                            <div>
+                                <p class="capstone-eyebrow capstone-eyebrow--dark"><span/> Why Capstone</p>
+                                <h2 class="capstone-heading">Made for a better daily ritual.</h2>
+                            </div>
+                            <p>Practical engineering and considered design come together in every collection.</p>
                         </div>
                         <div class="row g-4">
-                            <div class="col-lg-4">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <h5 class="feature-title">Premium Quality</h5>
-                                    <p class="feature-description">Chrome &amp; Nickel finish engineered for longevity
-                                        and luxury.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <i class="fa fa-leaf"></i>
-                                    </div>
-                                    <h5 class="feature-title">Water Efficient</h5>
-                                    <p class="feature-description">Eco flow regulators for efficient water management.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <i class="fa fa-shield"></i>
-                                    </div>
-                                    <h5 class="feature-title">Unmatched Warranty</h5>
-                                    <p class="feature-description">Peace of mind with reliable support and service
-                                        coverage.
-                                    </p>
-                                </div>
-                            </div>
+                            <div class="col-md-4"><article class="capstone-value-card"><span class="capstone-icon"><i class="fa fa-star"/></span><h3>Premium quality</h3><p>Chrome and nickel finishes engineered for everyday durability, lasting appeal and a refined touch.</p></article></div>
+                            <div class="col-md-4"><article class="capstone-value-card"><span class="capstone-icon"><i class="fa fa-tint"/></span><h3>Water efficient</h3><p>Eco flow regulators support thoughtful water management without sacrificing comfort or performance.</p></article></div>
+                            <div class="col-md-4"><article class="capstone-value-card"><span class="capstone-icon"><i class="fa fa-shield"/></span><h3>Service backed</h3><p>Reliable support and warranty coverage provide confidence long after installation.</p></article></div>
                         </div>
                     </div>
                 </section>
 
-                <!-- PRODUCTS SECTION -->
-                <section id="products" class="products-section py-5">
+                <section id="catalogue" class="capstone-catalogue section-space">
                     <div class="container">
-                        <div class="text-center mb-5">
-                            <h2 class="section-title">Our Collection</h2>
-                            <p class="section-subtitle">Premium bath fittings designed for elegance and function</p>
+                        <div class="capstone-section-header capstone-section-header--catalogue">
+                            <div>
+                                <p class="capstone-eyebrow capstone-eyebrow--dark"><span/> Browse the range</p>
+                                <h2 class="capstone-heading">Find the right finish for every space.</h2>
+                            </div>
+                            <p>Explore the Capstone products currently available on our website, organised by category.</p>
                         </div>
 
-                        <t t-foreach="category_products" t-as="cat_prod">
-                            <div class="mb-5">
-                                <!-- Category Header -->
-                                <div class="text-center mb-4">
-                                    <h3 class="category-title" t-field="cat_prod['category'].name"/>
-                                </div>
+                        <nav t-if="category_products" class="capstone-category-nav" aria-label="Product categories">
+                            <t t-foreach="category_products" t-as="cat_prod">
+                                <a t-attf-href="#category-#{cat_prod['category'].id}" t-esc="cat_prod['category'].name"/>
+                            </t>
+                        </nav>
 
-                                <!-- Product Grid -->
-                                <div class="product-grid">
-                                    <t t-foreach="cat_prod['products']" t-as="product">
-                                        <div class="product-item">
-                                            <div class="product-card">
-                                                <div class="product-image" style="height: 250px; background: #fff;">
+                        <t t-if="category_products">
+                            <t t-foreach="category_products" t-as="cat_prod">
+                                <section t-attf-id="category-#{cat_prod['category'].id}" class="capstone-category-section">
+                                    <div class="capstone-category-heading">
+                                        <div>
+                                            <p>Capstone collection</p>
+                                            <h3 t-field="cat_prod['category'].name"/>
+                                        </div>
+                                        <span t-esc="'%s products' % len(cat_prod['products'])"/>
+                                    </div>
+                                    <div class="capstone-product-grid">
+                                        <t t-foreach="cat_prod['products']" t-as="product">
+                                            <article class="capstone-product-card">
+                                                <a t-att-href="product.website_url" class="capstone-product-card__image" t-att-title="product.name">
                                                     <t t-if="product.image_1920">
-                                                        <img t-att-src="'/web/image/product.template/%s/image_1920' % product.id"
-                                                             t-att-alt="product.name"
-                                                             style="width: 100%; height: 100%; object-fit: contain;"/>
+                                                        <img t-att-src="'/web/image/product.template/%s/image_1920' % product.id" t-att-alt="product.name" loading="lazy"/>
                                                     </t>
                                                     <t t-else="">
-                                                        <div class="placeholder-image d-flex align-items-center justify-content-center"
-                                                             style="height: 100%; background: #f8f9fa;">
-                                                            <i class="fas fa-image fa-3x text-muted"></i>
-                                                        </div>
+                                                        <img src="/capstone_custom_website/static/src/img/img_1.jpg" t-att-alt="'%s catalogue placeholder' % product.name" loading="lazy"/>
                                                     </t>
+                                                </a>
+                                                <div class="capstone-product-card__body">
+                                                    <p t-field="cat_prod['category'].name"/>
+                                                    <h4><a t-att-href="product.website_url" t-field="product.name"/></h4>
+                                                    <a t-att-href="product.website_url" class="capstone-product-card__link">View product <i class="fa fa-arrow-right"/></a>
                                                 </div>
-
-                                                <div class="product-info">
-                                                    <h4 class="product-name" t-field="product.name"/>
-                                                    <!--                                                    <div class="product-cta">-->
-                                                    <!--                                                        <a href="#" class="btn btn-view">View Details</a>-->
-                                                    <!--                                                    </div>-->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </t>
-                                </div>
-                            </div>
+                                            </article>
+                                        </t>
+                                    </div>
+                                </section>
+                            </t>
                         </t>
+                        <div t-else="" class="capstone-empty-catalogue">
+                            <i class="fa fa-th-large"/>
+                            <h3>Our catalogue is being refreshed.</h3>
+                            <p>Please check back soon, or contact our team to discuss the range you need.</p>
+                            <a href="/contactus" class="capstone-btn capstone-btn--primary">Contact us</a>
+                        </div>
                     </div>
                 </section>
 
-
-                <!-- BROCHURE GALLERY -->
-                <section class="gallery-section py-5">
+                <section class="capstone-brochures section-space">
                     <div class="container">
-                        <div class="text-center mb-5">
-                            <h2 class="section-title">Our Brochure Collection</h2>
-                            <p class="section-subtitle">Explore our premium product range through our brochures</p>
+                        <div class="capstone-section-header">
+                            <div>
+                                <p class="capstone-eyebrow capstone-eyebrow--dark"><span/> Our brochure collection</p>
+                                <h2 class="capstone-heading">A closer look at our range.</h2>
+                            </div>
+                            <p>Explore our premium product collections, finishes and warranty information.</p>
                         </div>
-                        <div class="gallery-grid">
-                            <div class="gallery-item">
-                                <div class="gallery-image">
-                                    <img src="/capstone_custom_website/static/src/img/b1.jpg"
-                                         alt="Capstone Brochure - Anniversary Edition"/>
-                                    <!--                                    <div class="gallery-overlay">-->
-                                    <!--                                        <div class="overlay-content">-->
-                                    <!--                                            <h5>Anniversary Edition</h5>-->
-                                    <!--                                            <p>7 Years of Excellence</p>-->
-                                    <!--                                            <a href="#" class="btn btn-download">-->
-                                    <!--                                                <i class="fas fa-download me-2"></i>Download-->
-                                    <!--                                            </a>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                </div>
-                            </div>
-                            <div class="gallery-item">
-                                <div class="gallery-image">
-                                    <img src="/capstone_custom_website/static/src/img/b2.jpg"
-                                         alt="Capstone Brochure - Product Range"/>
-                                    <!--                                    <div class="gallery-overlay">-->
-                                    <!--                                        <div class="overlay-content">-->
-                                    <!--                                            <h5>Product Range</h5>-->
-                                    <!--                                            <p>Complete Collection</p>-->
-                                    <!--                                            <a href="#" class="btn btn-download">-->
-                                    <!--                                                <i class="fas fa-download me-2"></i>Download-->
-                                    <!--                                            </a>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                </div>
-                            </div>
-                            <div class="gallery-item">
-                                <div class="gallery-image">
-                                    <img src="/capstone_custom_website/static/src/img/b3.jpg"
-                                         alt="Capstone Brochure - Warranty"/>
-                                    <!--                                    <div class="gallery-overlay">-->
-                                    <!--                                        <div class="overlay-content">-->
-                                    <!--                                            <h5>Warranty Information</h5>-->
-                                    <!--                                            <p>Our Promise to You</p>-->
-                                    <!--                                            <a href="#" class="btn btn-download">-->
-                                    <!--                                                <i class="fas fa-download me-2"></i>Download-->
-                                    <!--                                            </a>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                </div>
-                            </div>
-                            <div class="gallery-item">
-                                <div class="gallery-image">
-                                    <img src="/capstone_custom_website/static/src/img/b4.jpg"
-                                         alt="Capstone Brochure - Color Options"/>
-                                    <!--                                    <div class="gallery-overlay">-->
-                                    <!--                                        <div class="overlay-content">-->
-                                    <!--                                            <h5>Color Options</h5>-->
-                                    <!--                                            <p>Design Your Perfect Bath</p>-->
-                                    <!--                                            <a href="#" class="btn btn-download">-->
-                                    <!--                                                <i class="fas fa-download me-2"></i>Download-->
-                                    <!--                                            </a>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                </div>
-                            </div>
+                        <div class="capstone-brochure-grid">
+                            <figure><img src="/capstone_custom_website/static/src/img/b1.jpg" alt="Capstone anniversary brochure" loading="lazy"/><figcaption>Anniversary edition</figcaption></figure>
+                            <figure><img src="/capstone_custom_website/static/src/img/b2.jpg" alt="Capstone product range brochure" loading="lazy"/><figcaption>Product range</figcaption></figure>
+                            <figure><img src="/capstone_custom_website/static/src/img/b3.jpg" alt="Capstone warranty brochure" loading="lazy"/><figcaption>Warranty information</figcaption></figure>
+                            <figure><img src="/capstone_custom_website/static/src/img/b4.jpg" alt="Capstone colour options brochure" loading="lazy"/><figcaption>Colour options</figcaption></figure>
                         </div>
                     </div>
                 </section>
 
-
-                <!-- CTA SECTION -->
-                <section class="contact-section py-5">
+                <section class="capstone-contact section-space">
                     <div class="container">
-                        <div class="contact-card">
-                            <div class="contact-content">
-                                <h2 class="contact-title">Looking for something custom?</h2>
-                                <p class="contact-text">Reach out to our sales team for personalized fittings and bulk
-                                    orders.
-                                </p>
-                                <div class="contact-buttons">
-                                    <a href="/contactus" class="btn btn-contact me-3">
-                                        <i class="fa fa-envelope me-2"></i>Contact Us
-                                    </a>
-                                    <a href="/complaint/register" class="btn btn-complaint">
-                                        <i class="fa fa-exclamation-triangle me-2"></i>Register Complaint
-                                    </a>
-                                </div>
+                        <div class="capstone-contact__card">
+                            <div>
+                                <p class="capstone-eyebrow"><span/> Let’s talk</p>
+                                <h2>Looking for something custom?</h2>
+                                <p>Speak with our sales team for personalised fittings, project support and bulk orders.</p>
                             </div>
-                            <div class="contact-image">
-                                <div class="floating">
-                                    <i class="fa fa-envelope"></i>
-                                </div>
+                            <div class="capstone-actions">
+                                <a href="/contactus" class="capstone-btn capstone-btn--primary"><i class="fa fa-envelope"/> Contact us</a>
+                                <a href="/complaint/register" class="capstone-btn capstone-btn--outline"><i class="fa fa-life-ring"/> Register a complaint</a>
                             </div>
                         </div>
                     </div>
                 </section>
-
-                <style>
-                    /* Contact Section Button Styles */
-                    .contact-buttons {
-                    display: flex;
-                    gap: 15px;
-                    flex-wrap: wrap;
-                    align-items: center;
-                    }
-
-                    .btn-contact {
-                    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    text-decoration: none;
-                    display: inline-flex;
-                    align-items: center;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-                    }
-
-                    .btn-contact:hover {
-                    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-                    color: white;
-                    }
-
-                    .btn-complaint {
-                    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    text-decoration: none;
-                    display: inline-flex;
-                    align-items: center;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-                    }
-
-                    .btn-complaint:hover {
-                    background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
-                    color: white;
-                    }
-
-                    /* Responsive Design */
-                    @media (max-width: 576px) {
-                    .contact-buttons {
-                    flex-direction: column;
-                    align-items: stretch;
-                    gap: 10px;
-                    }
-
-                    .btn-contact,
-                    .btn-complaint {
-                    width: 100%;
-                    justify-content: center;
-                    margin: 0;
-                    }
-
-                    .me-3 {
-                    margin-right: 0 !important;
-                    }
-                    }
-
-                    @media (max-width: 768px) {
-                    .contact-buttons {
-                    justify-content: center;
-                    }
-
-                    .btn-contact,
-                    .btn-complaint {
-                    padding: 10px 20px;
-                    font-size: 14px;
-                    }
-                    }
-                </style>
-
-            </div>
+            </main>
         </t>
     </template>
 </odoo>

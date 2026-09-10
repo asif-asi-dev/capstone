@@ -6,23 +6,25 @@ class CapstoneBathFittings(http.Controller):
 
     @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
-        # Get all product categories
-        categories = request.env['product.category'].sudo().search([])
+        """Render the public catalogue from products published for this website.
 
-        category_products = []
-        for category in categories:
-            # Fetch products under the category
-            products = request.env['product.template'].sudo().search([
-                ('categ_id', '=', category.id),
-                ('detailed_type', '=', 'product'),
-                ('active', '=', True)
-            ])
-            # Append only if there are products
-            if products:
-                category_products.append({
-                    'category': category,
-                    'products': products
-                })
+        The website-published field respects the current website, which keeps
+        unpublished and other-website products out of the public catalogue.
+        """
+        products = request.env['product.template'].sudo().with_context(
+            website_id=request.website.id,
+        ).search([
+            ('active', '=', True),
+            ('website_published', '=', True),
+        ], order='categ_id, name')
+
+        category_products = [
+            {
+                'category': category,
+                'products': products.filtered(lambda product: product.categ_id == category),
+            }
+            for category in products.mapped('categ_id').sorted('name')
+        ]
 
         return request.render('capstone_custom_website.homepage', {
             'category_products': category_products,
