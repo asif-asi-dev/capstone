@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="operation_costing_form" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.capstone.costing</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="before">
+                <group string="Processing Cost">
+                    <field name="capstone_currency_id" invisible="1"/>
+                    <field name="capstone_cost_method"/>
+                    <field name="capstone_cost_rate" invisible="capstone_cost_method == 'hourly'"/>
+                    <field name="capstone_quantity_basis" invisible="capstone_cost_method != 'piece'"/>
+                    <div class="text-muted" invisible="capstone_cost_method != 'batch'">One fixed fee per work order, regardless of quantity. Copied or split orders require a new charge decision.</div>
+                    <div class="text-muted" invisible="capstone_cost_method != 'piece'">Rate per finished product inventory unit. Processed quantities include paid rejects and must be confirmed on each work order.</div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="workorder_costing_form" model="ir.ui.view">
+        <field name="name">mrp.workorder.capstone.costing</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="before">
+                <group string="Processing Cost">
+                    <field name="capstone_currency_id" invisible="1"/>
+                    <field name="capstone_cost_method" groups="mrp.group_mrp_manager" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_cost_method" groups="!mrp.group_mrp_manager" readonly="1"/>
+                    <field name="capstone_cost_rate" groups="mrp.group_mrp_manager" invisible="capstone_cost_method == 'hourly'" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_cost_rate" groups="!mrp.group_mrp_manager" invisible="capstone_cost_method == 'hourly'" readonly="1"/>
+                    <field name="capstone_quantity_basis" groups="mrp.group_mrp_manager" invisible="capstone_cost_method != 'piece'" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_quantity_basis" groups="!mrp.group_mrp_manager" invisible="capstone_cost_method != 'piece'" readonly="1"/>
+                    <field name="capstone_charge_uom_id" invisible="capstone_cost_method != 'piece'"/>
+                    <field name="capstone_charge_quantity" invisible="capstone_cost_method != 'piece' or capstone_quantity_basis != 'processed'" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_charge_batch" groups="mrp.group_mrp_manager" invisible="capstone_cost_method != 'batch'" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_charge_batch" groups="!mrp.group_mrp_manager" invisible="capstone_cost_method != 'batch'" readonly="1"/>
+                    <field name="capstone_charge_confirmed" invisible="capstone_cost_method == 'hourly' or (capstone_cost_method == 'piece' and capstone_quantity_basis == 'good')" readonly="production_state in ('done', 'cancel')"/>
+                    <field name="capstone_processing_cost"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
