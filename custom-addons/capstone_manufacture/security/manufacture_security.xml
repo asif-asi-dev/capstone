@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Global rules intersect with other group rules; another group cannot
+         accidentally grant operators access to an unassigned work center. -->
+    <record id="workcenter_employee_rule" model="ir.rule">
+        <field name="name">Work centers: assigned employee logins</field>
+        <field name="model_id" ref="mrp.model_mrp_workcenter"/>
+        <field name="domain_force">[(1, '=', 1)] if user.has_group('mrp.group_mrp_manager') else [('capstone_allowed_user_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="workorder_employee_rule" model="ir.rule">
+        <field name="name">Work orders: assigned employee logins</field>
+        <field name="model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="domain_force">[(1, '=', 1)] if user.has_group('mrp.group_mrp_manager') else [('workcenter_id.capstone_allowed_user_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="productivity_employee_rule" model="ir.rule">
+        <field name="name">Work center time logs: assigned employee logins</field>
+        <field name="model_id" ref="mrp.model_mrp_workcenter_productivity"/>
+        <field name="domain_force">[(1, '=', 1)] if user.has_group('mrp.group_mrp_manager') else [('workcenter_id.capstone_allowed_user_ids', 'in', [user.id])]</field>
+    </record>
+</odoo>
